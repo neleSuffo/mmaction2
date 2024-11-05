@@ -33,5 +33,5 @@ visualizer = dict(  # Config of visualizer
     vis_backends=vis_backends)
 
 log_level = 'INFO'  # The level of logging
-load_from = None  # Load model checkpoint as a pre-trained model from a given path. This will not resume training.
+load_from = 'https://download.openmmlab.com/mmaction/recognition/tsn/tsn_r50_video_dense_1x1x8_100e_kinetics400_rgb/tsn_r50_video_dense_1x1x8_100e_kinetics400_rgb_20200703-0f19175f.pth' # Load model checkpoint as a pre-trained model from a given path. This will not resume training.
 resume = False  # Whether to resume from the checkpoint defined in `load_from`. If `load_from` is None, it will resume the latest checkpoint in the `work_dir`.
