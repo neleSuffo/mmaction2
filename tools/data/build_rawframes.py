@@ -72,47 +72,47 @@ def extract_frame(vid_item):
         else:
             if args.new_short == 0:
                 cmd = osp.join(
-                    f"denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                     f' -nw={args.new_width} -nh={args.new_height} -v')
             else:
                 cmd = osp.join(
-                    f"denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                     f' -ns={args.new_short} -v')
             run_success = os.system(cmd)
     elif task == 'flow':
         if args.input_frames:
             if args.new_short == 0:
                 cmd = osp.join(
-                    f"denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -nw={args.new_width} --nh={args.new_height} -v --if')
             else:
                 cmd = osp.join(
-                    f"denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -ns={args.new_short} -v --if')
         else:
             if args.new_short == 0:
                 cmd = osp.join(
-                    f"denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -nw={args.new_width} --nh={args.new_height} -v')
             else:
                 cmd = osp.join(
-                    f"denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -ns={args.new_short} -v')
         run_success = os.system(cmd)
     else:
         if args.new_short == 0:
             cmd_rgb = osp.join(
-                f"denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                 f' -nw={args.new_width} -nh={args.new_height} -v')
             cmd_flow = osp.join(
-                f"denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                 f' -nw={args.new_width} -nh={args.new_height} -v')
         else:
             cmd_rgb = osp.join(
-                f"denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                 f' -ns={args.new_short} -v')
             cmd_flow = osp.join(
-                f"denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                 f' -ns={args.new_short} -v')
         run_success_rgb = os.system(cmd_rgb)
         run_success_flow = os.system(cmd_flow)
@@ -172,7 +172,7 @@ def parse_args():
         '--ext',
         type=str,
         default='avi',
-        choices=['avi', 'mp4', 'webm'],
+        choices=['avi', 'mp4', 'webm', 'MP4'],
         help='video file extensions')
     parser.add_argument(
         '--mixed-ext',
