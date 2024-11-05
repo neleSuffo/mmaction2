@@ -3,6 +3,18 @@ from pathlib import Path
 from typing import Dict
 import pandas as pd
 
+# List of labels to include in the ActivityNet format
+list_to_include = ['Playing with Object', 
+                   'Playing without Object', 
+                   'Pretend play',
+                   'Watching Something',
+                   'Reading a Book',
+                   'Drawing',
+                   'Crafting Things',
+                   'Dancing',
+                   'Making Music']
+
+
 # Load the video_info_new.csv file
 video_info_new_path = "/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/video_info_new.csv"
 df_video_info_new = pd.read_csv(video_info_new_path)
@@ -58,15 +70,20 @@ def convert_annotations(data: Dict, fps: float = 30.0) -> Dict:
 
             # Check if there is at least one timestamp
             if timestamps and "attributes" in timestamps[0] and timestamps[0]["attributes"]:
-                # Access the first timestamp directly
-                label = timestamps[0]["attributes"][0]["name"]
-                segment = [start_time / 1_000_000.0, end_time / 1_000_000.0]
+                # Collect all "name" entries in a list
+                names = [attr["name"] for timestamp in timestamps for attr in timestamp.get("attributes", [])]
+                # Find the first name that is in the list_to_include
+                label = next((name for name in names if name in list_to_include), None)
+                
+                # Add the annotation if a label was found
+                if label is not None:
+                    segment = [start_time / 1_000_000.0, end_time / 1_000_000.0]
 
-                # Append the annotation for this timestamp
-                converted_annotations[short_video_id]["annotations"].append({
-                    "segment": segment,
-                    "label": label
-                })
+                    # Append the annotation for this timestamp
+                    converted_annotations[short_video_id]["annotations"].append({
+                        "segment": segment,
+                        "label": label
+                    })
 
     return converted_annotations
 
