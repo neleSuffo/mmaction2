@@ -12,8 +12,13 @@ list_to_include = ['Playing with Object',
                    'Drawing',
                    'Crafting Things',
                    'Dancing',
-                   'Making Music']
-
+                   'Making Music',
+                   'Child Talking',
+                   'Other Person Talking',
+                   'Overheard Speech',
+                   'Singing/Humming',
+                   'Listening to Music/Audiobook',
+                   ]
 
 # Load the video_info_new.csv file
 video_info_new_path = "/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/video_info_new.csv"
