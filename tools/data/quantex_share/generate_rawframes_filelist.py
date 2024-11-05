@@ -11,7 +11,7 @@ action_name_list = 'action_name.csv'
 train_rawframe_dir = rawframe_dir
 val_rawframe_dir = rawframe_dir
 
-json_file = f'{data_file}/quantex_share.v1-3.min.json' #annotation file
+json_file = f'{data_file}/quantex_share.json' #annotation file
 
 
 def generate_rawframes_filelist():
