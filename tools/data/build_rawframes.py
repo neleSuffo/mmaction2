@@ -100,19 +100,27 @@ def extract_frame(vid_item):
                     f' -ns={args.new_short} -v')
         run_success = os.system(cmd)
     else:
+        # Define separate output directories for RGB and Flow features
+        out_rgb_path = osp.join(out_full_path, 'rgb')
+        out_flow_path = osp.join(out_full_path, 'flow')
+        
+        # Ensure the output directories exist
+        os.makedirs(out_rgb_path, exist_ok=True)
+        os.makedirs(out_flow_path, exist_ok=True)
+        
         if args.new_short == 0:
             cmd_rgb = osp.join(
-                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_rgb_path}'"
                 f' -nw={args.new_width} -nh={args.new_height} -v')
             cmd_flow = osp.join(
-                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_flow_path}'"  # noqa: E501
                 f' -nw={args.new_width} -nh={args.new_height} -v')
         else:
             cmd_rgb = osp.join(
-                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_rgb_path}'"
                 f' -ns={args.new_short} -v')
             cmd_flow = osp.join(
-                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_flow_path}'"  # noqa: E501
                 f' -ns={args.new_short} -v')
         run_success_rgb = os.system(cmd_rgb)
         run_success_flow = os.system(cmd_flow)
