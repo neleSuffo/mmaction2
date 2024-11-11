@@ -8,6 +8,9 @@ from mmaction.registry import DATASETS
 from mmaction.utils import ConfigType
 from .base import BaseActionDataset
 
+from mmcv.transforms import BaseTransform
+from mmcv.transforms import TRANSFORMS
+import numpy as np
 
 @DATASETS.register_module()
 class ActivityNetDataset(BaseActionDataset):
@@ -92,3 +95,25 @@ class ActivityNetDataset(BaseActionDataset):
             video_info['filename'] = video_name
             data_list.append(video_info)
         return data_list
+
+@DATASETS.register_module()
+class CustomActivityNetDataset(ActivityNetDataset):
+    def __init__(self, ann_file, pipeline, data_prefix=None, test_mode=False):
+        super().__init__(ann_file, pipeline, data_prefix, test_mode)
+    
+    def get_data_info(self, idx):
+        data_info = super().get_data_info(idx)
+        # Construct 'instances' key
+        instances = []
+        annotations = data_info.get('annotations', [])
+        for annotation in annotations:
+            instance = {}
+            # Map 'label' to integer index using a label map
+            instance['label'] = annotation['label']
+            # Include the segment information
+            instance['segment'] = annotation['segment']
+            # Include other necessary instance-level annotations if needed
+            instances.append(instance)
+        data_info['instances'] = instances
+        return data_info
+    
