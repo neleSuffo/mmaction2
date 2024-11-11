@@ -18,6 +18,7 @@ train_pipeline = [
     dict(type='DecordInit', **file_client_args),
     dict(type='SampleFrames', clip_len=1, frame_interval=1, num_clips=3),
     dict(type='DecordDecode'),
+    dict(type='LoadAnnotations', with_label=True),  # Add a label to the data
     dict(type='Resize', scale=(-1, 256)),
     dict(
         type='MultiScaleCrop',
