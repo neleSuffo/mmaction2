@@ -4,7 +4,7 @@ _base_ = [
 ]
 
 # dataset settings
-dataset_type = 'ActivityNetDataset'
+dataset_type = 'CustomActivityNetDataset'
 data_root = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos/videos_train'
 data_root_val = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos/videos_val'
 ann_file_train = 'data/quantex_share/quantex_share.json'
@@ -18,7 +18,7 @@ train_pipeline = [
     dict(type='DecordInit', **file_client_args),
     dict(type='SampleFrames', clip_len=1, frame_interval=1, num_clips=3),
     dict(type='DecordDecode'),
-    dict(type='LoadAnnotations', with_label=True),  # Add a label to the data
+    dict(type='LoadCustomAnnotations', with_label=True, with_segment=True),
     dict(type='Resize', scale=(-1, 256)),
     dict(
         type='MultiScaleCrop',
@@ -40,6 +40,7 @@ val_pipeline = [
         num_clips=3,
         test_mode=True),
     dict(type='DecordDecode'),
+    dict(type='LoadCustomAnnotations', with_label=True, with_segment=True),
     dict(type='Resize', scale=(-1, 256)),
     dict(type='CenterCrop', crop_size=224),
     dict(type='FormatShape', input_format='NCHW'),
@@ -54,6 +55,7 @@ test_pipeline = [
         num_clips=25,
         test_mode=True),
     dict(type='DecordDecode'),
+    dict(type='LoadCustomAnnotations', with_label=True, with_segment=True),
     dict(type='Resize', scale=(-1, 256)),
     dict(type='TenCrop', crop_size=224),
     dict(type='FormatShape', input_format='NCHW'),
