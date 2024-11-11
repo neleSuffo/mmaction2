@@ -117,3 +117,71 @@ class CustomActivityNetDataset(ActivityNetDataset):
         data_info['instances'] = instances
         return data_info
     
+
+@TRANSFORMS.register_module()
+class LoadCustomAnnotations(BaseTransform):
+    """Load and process the custom annotation format with labels and segments."""
+    
+    def __init__(self, with_label: bool = True, with_segment: bool = True, label_map: dict = None) -> None:
+        """The constructor method of the class.
+
+        Parameters
+        ----------
+        with_label : bool, optional
+            whether to load label annotations, by default True
+        with_segment : bool, optional
+            whether to load segment annotations, by default True
+        label_map : dict, optional
+            a dictionary mapping the label strings to integer indices, by default None
+        """
+        super().__init__()
+        self.with_label = with_label
+        self.with_segment = with_segment
+
+        self.label_map = label_map if label_map is not None else {
+            "Playing with Object": 0,
+            "Playing without Object": 1,
+            "Pretend play": 2,
+            "Watching Something": 3,
+            "Reading a Book": 4,
+            "Drawing": 5,
+            "Crafting Things": 6,
+            "Dancing": 7,
+            "Making Music": 8,
+            "Child Talking": 9,
+            "Other Person Talking": 10,
+            "Overheard Speech": 11,
+            "Singing/Humming": 12,
+            "Listening to Music/Audiobook": 13,
+        }
+
+    def _load_labels(self, results: dict) -> None:
+        """Private function to load label annotations."""
+        gt_labels = []
+        for instance in results['instances']:
+            gt_labels.append(instance['label'])
+        results['gt_labels'] = np.array(gt_labels, dtype=np.int64)
+
+    def _load_segments(self, results: dict) -> None:
+        """Private function to load segment annotations (start, end)."""
+        gt_segments = []
+        for instance in results['instances']:
+            # Access the 'annotations' list and extract the segment
+            for annotation in instance['annotations']:
+                segment = annotation['segment']  # Extract segment (start, end)
+                gt_segments.append(segment)
+        # Store the result as an ndarray in (N, 2) format, where N is the number of segments
+        results['gt_segments'] = np.array(gt_segments, dtype=np.float32)
+
+    def transform(self, results: dict) -> dict:
+        """Function to load multiple types of annotations."""
+        if self.with_label:
+            self._load_labels(results)
+        if self.with_segment:
+            self._load_segments(results)
+        return results
+
+    def __repr__(self) -> str:
+        repr_str = self.__class__.__name__
+        repr_str += f'(with_label={self.with_label}, with_segment={self.with_segment})'
+        return repr_str
