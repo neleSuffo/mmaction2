@@ -88,6 +88,7 @@ class ActivityNetDataset(BaseActionDataset):
             feature_path = video_name + '.csv'
             feature_path = '%s/%s' % (self.data_prefix['video'], feature_path)
             video_info['feature_path'] = feature_path
-            video_info['video_name'] = video_name
+            #video_info['video_name'] = video_name
+            video_info['filename'] = video_name
             data_list.append(video_info)
         return data_list
