@@ -94,21 +94,23 @@ def convert_annotations(data: Dict, fps: float = 30.0) -> Dict:
 
 # Function to process all JSON files in a folder and generate ActivityNet format
 def process_all_json_files(input_dir: Path, output_file: Path, fps: float = 30.0) -> None:
-    all_annotations = {
-        "version": "1.0",
-        "taxonomy": [
-            {"nodeId": 1, "nodeName": "Playing with object", "parentId": None},
-            {"nodeId": 2, "nodeName": "Playing without object", "parentId": None},
-            {"nodeId": 3, "nodeName": "Pretend play", "parentId": None},
-            {"nodeId": 4, "nodeName": "Watching something", "parentId": None},
-            {"nodeId": 5, "nodeName": "Reading book", "parentId": None},
-            {"nodeId": 6, "nodeName": "Drawing", "parentId": None},
-            {"nodeId": 7, "nodeName": "Crafting things", "parentId": None},
-            {"nodeId": 8, "nodeName": "Dancing", "parentId": None},
-            {"nodeId": 9, "nodeName": "Making music", "parentId": None},
-        ],
-        "database": {}
-    }
+    # all_annotations = {
+    #     "version": "1.0",
+    #     "taxonomy": [
+    #         {"nodeId": 1, "nodeName": "Playing with object", "parentId": None},
+    #         {"nodeId": 2, "nodeName": "Playing without object", "parentId": None},
+    #         {"nodeId": 3, "nodeName": "Pretend play", "parentId": None},
+    #         {"nodeId": 4, "nodeName": "Watching something", "parentId": None},
+    #         {"nodeId": 5, "nodeName": "Reading book", "parentId": None},
+    #         {"nodeId": 6, "nodeName": "Drawing", "parentId": None},
+    #         {"nodeId": 7, "nodeName": "Crafting things", "parentId": None},
+    #         {"nodeId": 8, "nodeName": "Dancing", "parentId": None},
+    #         {"nodeId": 9, "nodeName": "Making music", "parentId": None},
+    #     ],
+    #     "database": {}
+    # }
+    # Removed the initialization of "all_annotations" with "version" and "taxonomy" keys:
+    all_annotations = {}
 
     # Iterate over all files in the specified folder
     for filename in input_dir.glob("*.json"):
@@ -119,7 +121,8 @@ def process_all_json_files(input_dir: Path, output_file: Path, fps: float = 30.0
 
         # Convert annotations and merge them into the "database" field
         video_annotations = convert_annotations(data, fps)
-        all_annotations["database"].update(video_annotations)
+        #all_annotations["database"].update(video_annotations)
+        all_annotations.update(video_annotations)
 
     # Save combined_annotations as a JSON file in ActivityNet format
     with open(output_file, 'w') as file:
