@@ -1130,7 +1130,8 @@ class DecordInit(BaseTransform):
 
     def _get_video_reader(self, filename: str) -> object:
         if osp.splitext(filename)[0] == filename:
-            filename = filename + '.mp4'
+            filename = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos/' + filename + '.MP4' # Change to MP4
+            #filename = filename + '.mp4'
         try:
             import decord
         except ImportError:
