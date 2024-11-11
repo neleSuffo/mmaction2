@@ -7,9 +7,9 @@ _base_ = [
 dataset_type = 'ActivityNetDataset'
 data_root = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos/videos_train'
 data_root_val = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos/videos_val'
-ann_file_train = 'data/quantex_share/anno_train.json'
-ann_file_val = 'data/quantex_share/anno_val.json'
-ann_file_test = 'data/quantex_share/anno_test.json'
+ann_file_train = 'data/quantex_share/quantex_share.json'
+ann_file_val = 'data/quantex_share/quantex_share.json'
+ann_file_test = 'data/quantex_share/quantex_share.json'
 num_classes = 14
 
 file_client_args = dict(io_backend='disk')
