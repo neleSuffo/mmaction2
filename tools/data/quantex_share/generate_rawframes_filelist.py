@@ -2,11 +2,13 @@
 import json
 import os
 import os.path as osp
+import cv2
 
 data_file = '../../../data/quantex_share'
 video_list = f'{data_file}/video_info_new.csv' # 
 rawframe_dir = f'{data_file}/rawframes' # extracted rawframes
 action_name_list = 'action_name.csv'
+video_dir = f'{data_file}/videos'
 
 train_rawframe_dir = rawframe_dir
 val_rawframe_dir = rawframe_dir
@@ -15,7 +17,7 @@ json_file = f'{data_file}/quantex_share.json' #annotation file
 
 
 def generate_rawframes_filelist():
-    load_dict = json.load(open(json_file))
+    database = json.load(open(json_file))
 
     quantex_labels = open(action_name_list).readlines()
     quantex_labels = [x.strip() for x in quantex_labels[1:]]
@@ -37,7 +39,6 @@ def generate_rawframes_filelist():
                 return osp.basename(dir_name), len(os.listdir(dir_name))
         return None, None
 
-    database = load_dict['database']
     training = {}
     validation = {}
     key_dict = {}
@@ -79,28 +80,41 @@ def generate_rawframes_filelist():
     with open(osp.join(data_file, 'quantex_share_val_video.txt'), 'w') as fout:
         fout.write('\n'.join(val_lines))
 
-    def clip_list(k, anno, video_anno):
-        duration = anno['duration']
-        num_frames = video_anno[0]
-        fps = num_frames / duration
-        segs = anno['annotations']
+    def get_video_info(video_path):
+        video = cv2.VideoCapture(video_path)
+        
+        # Get FPS and number of frames
+        fps = video.get(cv2.CAP_PROP_FPS)
+        num_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+        
+        video.release()
+        return fps, num_frames
+    
+    def clip_list(k, anno):
+        fps, num_frames = get_video_info(osp.join(video_dir, k + '.MP4'))
+        annotations = anno['annotations']
         lines = []
-        for seg in segs:
-            segment = seg['segment']
-            label = seg['label']
+        for annotation in annotations:
+            segment = annotation['segment']
+            label = annotation['label']
             label = quantex_labels.index(label)
             start, end = int(segment[0] * fps), int(segment[1] * fps)
+            duration = end - start + 1
             if end > num_frames - 1:
                 end = num_frames - 1
-            newline = f'{k} {start} {end - start + 1} {label}'
+            if duration < 0:
+                print(f'{k} {start} {duration} {label}')
+                print("FPS: ", fps)
+                assert duration > 0
+            newline = f'{k} {start} {duration} {label}'
             lines.append(newline)
         return lines
 
     train_clips, val_clips = [], []
     for k in training:
-        train_clips.extend(clip_list(k, database[key_dict[k]], training[k]))
+        train_clips.extend(clip_list(k, database[key_dict[k]]))
     for k in validation:
-        val_clips.extend(clip_list(k, database[key_dict[k]], validation[k]))
+        val_clips.extend(clip_list(k, database[key_dict[k]]))
 
     with open(osp.join(data_file, 'quantex_share_train_clip.txt'), 'w') as fout:
         fout.write('\n'.join(train_clips))
