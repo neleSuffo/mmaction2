@@ -4,12 +4,11 @@ _base_ = [
 ]
 
 # dataset settings
-dataset_type = 'ActivityNetDataset'
-data_root = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos'
+dataset_type = 'VideoDataset'
+data_root = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos_train'
 data_root_val = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos/videos_val'
-ann_file_train = 'data/quantex_share/quantex_share.json'
-ann_file_val = 'data/quantex_share/quantex_share.json'
-ann_file_test = 'data/quantex_share/quantex_share.json'
+ann_file_train = 'data/quantex_share/quantex_share_train_clip.txt'
+ann_file_val = 'data/quantex_share/quantex_share_val_clip.txt'
 num_classes = 14
 
 file_client_args = dict(io_backend='disk')
@@ -67,8 +66,11 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_train,
-        data_prefix=dict(video=data_root),
-        pipeline=train_pipeline))
+        #data_prefix=dict(video=data_root),
+        pipeline=train_pipeline,
+        multi_class=True,
+        num_classes = num_classes),
+    )
 val_dataloader = dict(
     batch_size=32,
     num_workers=8,
@@ -77,9 +79,12 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_val,
-        data_prefix=dict(video=data_root_val),
+        #data_prefix=dict(video=data_root_val),
         pipeline=val_pipeline,
-        test_mode=True))
+        test_mode=True,
+        multi_class=True,
+        num_classes = num_classes),
+        )
 test_dataloader = dict(
     batch_size=1,
     num_workers=8,
@@ -88,9 +93,12 @@ test_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_val,
-        data_prefix=dict(video=data_root_val),
+        #data_prefix=dict(video=data_root_val),
         pipeline=test_pipeline,
-        test_mode=True))
+        test_mode=True,
+        multi_class=True,
+        num_classes = num_classes),
+    )
 
 val_evaluator = dict(type='AccMetric')
 test_evaluator = val_evaluator
