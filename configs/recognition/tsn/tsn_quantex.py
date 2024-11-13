@@ -5,7 +5,7 @@ _base_ = [
 
 # dataset settings
 dataset_type = 'VideoDataset'
-data_root = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos_train'
+data_root = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos/videos_train'
 data_root_val = '/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/videos/videos_val'
 ann_file_train = 'data/quantex_share/quantex_share_train_clip.txt'
 ann_file_val = 'data/quantex_share/quantex_share_val_clip.txt'
@@ -66,7 +66,7 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_train,
-        #data_prefix=dict(video=data_root),
+        data_prefix=dict(video=data_root),
         pipeline=train_pipeline,
         multi_class=True,
         num_classes = num_classes),
@@ -79,7 +79,7 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_val,
-        #data_prefix=dict(video=data_root_val),
+        data_prefix=dict(video=data_root_val),
         pipeline=val_pipeline,
         test_mode=True,
         multi_class=True,
@@ -93,7 +93,7 @@ test_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_val,
-        #data_prefix=dict(video=data_root_val),
+        data_prefix=dict(video=data_root_val),
         pipeline=test_pipeline,
         test_mode=True,
         multi_class=True,
