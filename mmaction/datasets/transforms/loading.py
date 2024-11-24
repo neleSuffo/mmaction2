@@ -2,6 +2,7 @@
 import copy as cp
 import io
 import os
+import logging
 import os.path as osp
 import shutil
 from typing import Dict, List, Optional, Union
@@ -1131,6 +1132,7 @@ class DecordInit(BaseTransform):
     def _get_video_reader(self, filename: str) -> object:
         if osp.splitext(filename)[0] == filename:
             filename = filename + '.MP4' # change to MP4
+            logging.info('Filename for data loading: %s', filename) 
         try:
             import decord
         except ImportError:
@@ -1293,7 +1295,7 @@ class OpenCVInit(BaseTransform):
 
             thread_id = get_thread_id()
             # save the file of same thread at the same place
-            new_path = osp.join(self.tmp_folder, f'tmp_{thread_id}.mp4')
+            new_path = osp.join(self.tmp_folder, f'tmp_{thread_id}.MP4')
             with open(new_path, 'wb') as f:
                 f.write(self.file_client.get(results['filename']))
 
