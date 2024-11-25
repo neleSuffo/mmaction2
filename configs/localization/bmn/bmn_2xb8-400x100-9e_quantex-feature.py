@@ -6,9 +6,9 @@ _base_ = [
 dataset_type = 'ActivityNetDataset'
 data_root = 'data/quantex_share/train'
 data_root_val = 'data/quantex_share/val'
-ann_file_train = 'data/quantex_share/quantex_share_train.json'
-ann_file_val = 'data/quantex_share/quantex_share_val.json'
-ann_file_test = 'data/quantex_share/quantex_share_test.json'
+ann_file_train = 'data/quantex_share/anno_train.json'
+ann_file_val = 'data/quantex_share/anet_anno_val.json'
+ann_file_test = 'data/quantex_share/anet_anno_val.json'
 
 train_pipeline = [ # Training data processing pipeline
     dict(type='LoadLocalizationFeature'), # Load localization feature pipeline
@@ -116,3 +116,4 @@ test_evaluator = dict(
     metric_type='AR@AN',
     dump_config=dict(out=f'{work_dir}/results.json', output_format='json'))
 val_evaluator = test_evaluator
+
