@@ -33,8 +33,5 @@ visualizer = dict(  # Config of visualizer
     vis_backends=vis_backends)
 
 log_level = 'INFO'  # The level of logging
-#load_from = 'https://download.openmmlab.com/mmaction/recognition/tsn/tsn_r50_video_dense_1x1x8_100e_kinetics400_rgb/tsn_r50_video_dense_1x1x8_100e_kinetics400_rgb_20200703-0f19175f.pth' # Load model checkpoint as a pre-trained model from a given path. This will not resume training.
-#load_from = 'https://download.openmmlab.com/mmaction/recognition/tsn/tsn_r50_1x1x3_100e_kinetics400_rgb/tsn_r50_1x1x3_100e_kinetics400_rgb_20200614-e508be42.pth' # rgb model
-#load_from = 'https://download.openmmlab.com/mmaction/recognition/tsn/tsn_r50_320p_1x1x3_110e_kinetics400_flow/tsn_r50_320p_1x1x3_110e_kinetics400_flow_20200705-3036bab6.pth' # flow model
 load_from = None  # The path to the checkpoint to load from. It can be a file path, URL, or None. If set to None, the model will not load any checkpoints at the beginning. If set to a URL, the checkpoint will be downloaded and cached before loading. If set to a file path, the checkpoint will be directly loaded.
 resume = False  # Whether to resume from the checkpoint defined in `load_from`. If `load_from` is None, it will resume the latest checkpoint in the `work_dir`.
