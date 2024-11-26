@@ -5,8 +5,8 @@ _base_ = [
 
 # dataset settings
 dataset_type = 'VideoDataset'
-data_root_val = 'data/kinetics400/videos_val'
-ann_file_val = 'data/kinetics400/kinetics400_val_list_videos.txt'
+data_root_val = 'data/quantex_share/videos_val'
+ann_file_val = 'data/quantex_share/quantex_share_val_clip.txt'
 
 file_client_args = dict(io_backend='disk')
 
