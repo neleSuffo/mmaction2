@@ -4,11 +4,11 @@ _base_ = [
 
 # dataset settings
 dataset_type = 'ActivityNetDataset'
-data_root = 'data/quantex_share/train'
-data_root_val = 'data/quantex_share/val'
+data_root = 'data/quantex_share/features/'
+data_root_val = 'data/quantex_share/features/'
 ann_file_train = 'data/quantex_share/anno_train.json'
-ann_file_val = 'data/quantex_share/anet_anno_val.json'
-ann_file_test = 'data/quantex_share/anet_anno_val.json'
+ann_file_val = 'data/quantex_share/anno_val.json'
+ann_file_test = 'data/quantex_share/anno_val.json'
 
 train_pipeline = [ # Training data processing pipeline
     dict(type='LoadLocalizationFeature'), # Load localization feature pipeline
@@ -110,7 +110,7 @@ param_scheduler = [  # Parameter scheduler for updating optimizer parameters, su
     milestones=[7, ],  # Steps to decay the learning rate
     gamma=0.1)]  # Multiplicative factor of parameter value decay
 
-work_dir = './work_dirs/bmn_400x100_2x8_9e_activitynet_feature_quantex_share/'
+work_dir = './work_dirs/bmn_400x100_2x8_9e_quantex_share_feature/'
 test_evaluator = dict(
     type='ANetMetric',
     metric_type='AR@AN',
