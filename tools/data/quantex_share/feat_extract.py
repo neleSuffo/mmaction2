@@ -72,7 +72,7 @@ def parse_args():
                         help='different types of data augmentation pipelines. Supports v1, v2, v3 and v4.')
     parser.add_argument('--num-segments', type=int, default=1,
                         help='number of segments to evenly split the video.')
-    parser.add_argument('--save-dir', type=str, default='./',
+    parser.add_argument('--save-dir', type=str, default='/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/features',
                         help='directory of saved results')
     opt = parser.parse_args()
     return opt
@@ -200,6 +200,7 @@ def main(logger):
 
         feat_file = '%s_%s_feat.npy' % (model_name, video_name)
         np.save(os.path.join(opt.save_dir, feat_file), video_feat.asnumpy())
+        logger.info(f'Successfully save feature at {os.path.join(opt.save_dir, feat_file)}')
 
         if vid > 0 and vid % opt.log_interval == 0:
             logger.info('%04d/%04d is done' % (vid, len(data_list)))
