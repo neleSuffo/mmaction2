@@ -1,0 +1,101 @@
+{
+    "147984": {
+        "duration_second": 606.639367,
+        "duration_frame": 18199,
+        "annotations": [
+            {
+                "segment": [
+                    0.0,
+                    606.639367
+                ],
+                "label": "Playing with Object"
+            }
+        ]
+    },
+    "183537": {
+        "duration_second": 1759.0573,
+        "duration_frame": 52771,
+        "annotations": [
+            {
+                "segment": [
+                    71.043709,
+                    632.066262
+                ],
+                "label": "Playing with Object"
+            },
+            {
+                "segment": [
+                    665.281219,
+                    811.122892
+                ],
+                "label": "Playing with Object"
+            },
+            {
+                "segment": [
+                    1257.072451,
+                    1259.662183
+                ],
+                "label": "Playing with Object"
+            },
+            {
+                "segment": [
+                    1332.110401,
+                    1346.907723
+                ],
+                "label": "Playing with Object"
+            }
+        ]
+    },
+    "189224": {
+        "duration_second": 1800.1984,
+        "duration_frame": 54005,
+        "annotations": [
+            {
+                "segment": [
+                    26.551535,
+                    699.76724
+                ],
+                "label": "Drawing"
+            },
+            {
+                "segment": [
+                    26.551535,
+                    699.76724
+                ],
+                "label": "Drawing"
+            }
+        ]
+    },
+    "204839": {
+        "duration_second": 298.4982,
+        "duration_frame": 8954,
+        "annotations": []
+    },
+    "207115": {
+        "duration_second": 1471.636833,
+        "duration_frame": 44149,
+        "annotations": [
+            {
+                "segment": [
+                    253.466165,
+                    356.159614
+                ],
+                "label": "Playing with Object"
+            },
+            {
+                "segment": [
+                    1172.039632,
+                    1437.884321
+                ],
+                "label": "Playing with Object"
+            },
+            {
+                "segment": [
+                    9.334821,
+                    131.149722
+                ],
+                "label": "Playing with Object"
+            }
+        ]
+    }
+}
