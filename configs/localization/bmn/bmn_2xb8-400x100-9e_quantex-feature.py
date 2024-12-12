@@ -4,8 +4,8 @@ _base_ = [
 
 # dataset settings
 dataset_type = 'ActivityNetDataset'
-data_root = 'data/quantex_share/features/'
-data_root_val = 'data/quantex_share/features/'
+data_root = 'data/quantex_share/mmaction_feat'
+data_root_val = 'data/quantex_share/mmaction_feat'
 ann_file_train = 'data/quantex_share/anno_train.json'
 ann_file_val = 'data/quantex_share/anno_val.json'
 ann_file_test = 'data/quantex_share/anno_val.json'
