@@ -100,7 +100,7 @@ class BMN(BaseModel):
                 self.hidden_dim_1d,
                 kernel_size=3,
                 padding=1,
-                groups=nr_groups,) nn.ReLU(inplace=True),
+                groups=nr_groups), nn.ReLU(inplace=True),
             nn.Conv1d(self.hidden_dim_1d, 1, kernel_size=1), nn.Sigmoid())
 
         # Proposal Evaluation Module
