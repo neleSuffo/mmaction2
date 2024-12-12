@@ -69,7 +69,7 @@ class BMN(BaseModel):
         self.hidden_dim_3d = hidden_dim_3d
 
         self._get_interp1d_mask()
-        nr_groups = 5
+        nr_groups = 1
         # Base Module
         self.x_1d_b = nn.Sequential(
             nn.Conv1d(
