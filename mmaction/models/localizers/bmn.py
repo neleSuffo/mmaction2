@@ -69,7 +69,7 @@ class BMN(BaseModel):
         self.hidden_dim_3d = hidden_dim_3d
 
         self._get_interp1d_mask()
-
+        nr_groups = 5
         # Base Module
         self.x_1d_b = nn.Sequential(
             nn.Conv1d(
@@ -77,13 +77,13 @@ class BMN(BaseModel):
                 self.hidden_dim_1d,
                 kernel_size=3,
                 padding=1,
-                groups=4), nn.ReLU(inplace=True),
+                groups=nr_groups), nn.ReLU(inplace=True),
             nn.Conv1d(
                 self.hidden_dim_1d,
                 self.hidden_dim_1d,
                 kernel_size=3,
                 padding=1,
-                groups=4), nn.ReLU(inplace=True))
+                groups=nr_groups), nn.ReLU(inplace=True))
 
         # Temporal Evaluation Module
         self.x_1d_s = nn.Sequential(
@@ -92,7 +92,7 @@ class BMN(BaseModel):
                 self.hidden_dim_1d,
                 kernel_size=3,
                 padding=1,
-                groups=4), nn.ReLU(inplace=True),
+                groups=nr_groups), nn.ReLU(inplace=True),
             nn.Conv1d(self.hidden_dim_1d, 1, kernel_size=1), nn.Sigmoid())
         self.x_1d_e = nn.Sequential(
             nn.Conv1d(
@@ -100,7 +100,7 @@ class BMN(BaseModel):
                 self.hidden_dim_1d,
                 kernel_size=3,
                 padding=1,
-                groups=4), nn.ReLU(inplace=True),
+                groups=nr_groups,) nn.ReLU(inplace=True),
             nn.Conv1d(self.hidden_dim_1d, 1, kernel_size=1), nn.Sigmoid())
 
         # Proposal Evaluation Module
