@@ -1834,7 +1834,8 @@ class GenerateLocalizationLabels(BaseTransform):
         """
         video_frame = results['duration_frame']
         video_second = results['duration_second']
-        feature_frame = results['feature_frame']
+        feature_frame = video_frame
+        #feature_frame = results['feature_frame']
         corrected_second = float(feature_frame) / video_frame * video_second
         annotations = results['annotations']
 
