@@ -10,8 +10,8 @@ model = dict(
 
 # dataset settings
 dataset_type = 'RawframeDataset'
-data_root_val = 'data/quantex_share/rawframes_val'
-ann_file_val = 'data/quantex_share/kinetics400_val_list_rawframes.txt'
+data_root_val = 'data/kinetics400/rawframes_val'
+ann_file_val = 'data/kinetics400/kinetics400_val_list_rawframes.txt'
 
 file_client_args = dict(io_backend='disk')
 

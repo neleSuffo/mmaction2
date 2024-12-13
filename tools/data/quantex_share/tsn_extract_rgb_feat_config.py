@@ -2,6 +2,7 @@
 _base_ = [
     'mmaction::_base_/models/tsn_r50.py', 'mmaction::_base_/default_runtime.py'
 ]
+model = dict(cls_head=dict(num_classes=174, dropout_ratio=0.5))
 
 # dataset settings
 dataset_type = 'RawframeDataset'
@@ -20,8 +21,8 @@ test_pipeline = [
 ]
 
 test_dataloader = dict(
-    batch_size=1,
-    num_workers=8,
+    batch_size=12,
+    num_workers=48,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
