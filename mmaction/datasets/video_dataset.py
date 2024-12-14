@@ -75,28 +75,6 @@ class VideoDataset(BaseActionDataset):
             test_mode=test_mode,
             **kwargs)
 
-    # def load_data_list(self) -> List[dict]:
-    #     """Load annotation file to get video information."""
-    #     exists(self.ann_file)
-    #     data_list = []
-    #     fin = list_from_file(self.ann_file)
-    #     for line in fin:
-    #         line_split = line.strip().split(self.delimiter)
-    #         if self.multi_class:
-    #             assert self.num_classes is not None
-    #             filename, label = line_split[0], line_split[1:]
-    #             label = list(map(int, label))
-    #         # add fake label for inference datalist without label
-    #         elif len(line_split) == 1:
-    #             filename, label = line_split[0], -1
-    #         else:
-    #             filename, label = line_split
-    #             label = int(label)
-    #         if self.data_prefix['video'] is not None:
-    #             filename = osp.join(self.data_prefix['video'], filename)
-    #         data_list.append(dict(filename=filename, label=label))
-    #     return data_list
-    
     def load_data_list(self) -> List[dict]:
         """Load annotation file to get video information."""
         exists(self.ann_file)
@@ -106,8 +84,7 @@ class VideoDataset(BaseActionDataset):
             line_split = line.strip().split(self.delimiter)
             if self.multi_class:
                 assert self.num_classes is not None
-                filename, start_frame, frame_duration, label = line_split[0], int(line_split[1]), int(line_split[2]), line_split[3:]
-                segment = [start_frame, start_frame + frame_duration]
+                filename, label = line_split[0], line_split[1:]
                 label = list(map(int, label))
             # add fake label for inference datalist without label
             elif len(line_split) == 1:
@@ -115,11 +92,7 @@ class VideoDataset(BaseActionDataset):
             else:
                 filename, label = line_split
                 label = int(label)
-            if self.data_prefix['video'] is not None:                    
+            if self.data_prefix['video'] is not None:
                 filename = osp.join(self.data_prefix['video'], filename)
-            if self.multi_class:
-                data_list.append(dict(filename=filename, segment=segment, label=label))
-            else:
-                data_list.append(dict(filename=filename, label=label))
+            data_list.append(dict(filename=filename, label=label))
         return data_list
-    
