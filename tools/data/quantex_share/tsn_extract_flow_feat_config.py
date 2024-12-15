@@ -20,13 +20,13 @@ test_pipeline = [
     dict(type='RawFrameDecode', **file_client_args),
     dict(type='Resize', scale=(-1, 256)),
     dict(type='CenterCrop', crop_size=256),
-    dict(type='FormatShape', input_format='NCHW_Flow'),
+    dict(type='FormatShape', input_format='NCHW'),
     dict(type='PackActionInputs')
 ]
 
 test_dataloader = dict(
-    batch_size=1,
-    num_workers=8,
+    batch_size=6,
+    num_workers=48,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
