@@ -1434,9 +1434,9 @@ class RawFrameDecode(BaseTransform):
                 imgs.append(cur_frame)
             elif modality == 'Flow':
                 x_filepath = osp.join(directory,
-                                      filename_tmpl.format('x', frame_idx))
+                                      filename_tmpl.format('flow_x', frame_idx))
                 y_filepath = osp.join(directory,
-                                      filename_tmpl.format('y', frame_idx))
+                                      filename_tmpl.format('flow_y', frame_idx))
                 x_img_bytes = self.file_client.get(x_filepath)
                 x_frame = mmcv.imfrombytes(x_img_bytes, flag='grayscale')
                 y_img_bytes = self.file_client.get(y_filepath)
