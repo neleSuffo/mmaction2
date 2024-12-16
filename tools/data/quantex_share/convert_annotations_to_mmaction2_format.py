@@ -1,23 +1,16 @@
 import json
+import logging
 from pathlib import Path
 from typing import Dict
 
 # List of labels to include in the ActivityNet format
-list_to_include = ['Playing with Object', 
-                   'Playing without Object', 
-                   'Pretend play',
-                   'Watching Something',
-                   'Reading a Book',
-                   'Drawing',
-                   'Crafting Things',
-                   'Dancing',
-                   'Making Music',
-                   'Child Talking',
-                   'Other Person Talking',
-                   'Overheard Speech',
-                   'Singing/Humming',
-                   'Listening to Music/Audiobook',
-                   ]
+list_to_include = [
+    'Playing with Object',
+    'Watching Something',
+    'Drawing',
+    'Crafting Things',
+    'Dancing',
+]
 
 # Function to read JSON from a file
 def read_json(file_path: str) -> Dict:
@@ -72,30 +65,42 @@ def convert_annotations(data: Dict, fps: float = 30.0) -> Dict:
     
     return converted_annotations
 
-
 # Function to process all JSON files in a folder
 def process_all_json_files(folder_path: Path, 
                            output_file: Path,
                            fps: float = 30.0) -> Dict:
     all_annotations = {}
     
+    # Set up logging
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
+    
+    # Find all JSON files in the specified folder
+    json_files = list(folder_path.rglob("*.json"))
+    num_files = len(json_files)
+    logger.info(f"Found {num_files} JSON files in the folder {folder_path}")
+    file_counter = 0
+    
     # Iterate over all files in the specified folder
-    for filename in folder_path.glob("*.json"):
+    for filename in json_files:
         if filename.name == output_file.name:
             continue  # Skip the combined file
         # Read the JSON file
         data = read_json(filename)
         
-        # Convert annotations and merge them into the main dictionary
+        # Convert annotations and merge them into the main dictionary (only if there are annotations)
         video_annotations = convert_annotations(data, fps)
-        all_annotations.update(video_annotations)
-    
+        for _, annotations in video_annotations.items():
+            if len(annotations["annotations"]) > 0:
+                all_annotations.update(video_annotations)
+                file_counter += 1
+                    
     # Save combined_annotations as a JSON file
     with open(output_file, 'w') as file:
         json.dump(all_annotations, file, indent=4)
-        
+    logger.info(f"Saved {file_counter} combined annotations to {output_file}")
 
 if __name__ == '__main__':
     input_dir = Path("/home/nele_pauline_suffo/ProcessedData/annotations_superannotate")
-    output_file = Path("/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/quantex_share_annotations_mmaction2.json")
+    output_file = Path("/home/nele_pauline_suffo/ProcessedData/annotations_superannotate/childlens_annotations.json")
     process_all_json_files(input_dir, output_file)
