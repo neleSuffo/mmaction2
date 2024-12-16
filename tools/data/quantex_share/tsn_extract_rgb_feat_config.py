@@ -4,17 +4,15 @@ _base_ = [
 ]
 
 # dataset settings
-dataset_type = 'VideoDataset'
+dataset_type = 'RawframeDataset'
 data_root_val = 'data/kinetics400/rawframes_val'
 ann_file_val = 'data/kinetics400/kinetics400_val_list_rawframes.txt'
 
 file_client_args = dict(io_backend='disk')
 
 test_pipeline = [
-    dict(type='DecordInit', **file_client_args),
-    # sample four clips from each video, where each clip contains 8 frames
-    dict(type='SampleFrames', clip_len=8, frame_interval=2, num_clips=4),
-    dict(type='DecordDecode'),
+    dict(type='UntrimmedSampleFrames', clip_len=1, clip_interval=16),
+    dict(type='RawFrameDecode', **file_client_args),
     dict(type='Resize', scale=(-1, 256)),
     dict(type='CenterCrop', crop_size=256),
     dict(type='FormatShape', input_format='NCHW'),
@@ -22,8 +20,8 @@ test_pipeline = [
 ]
 
 test_dataloader = dict(
-    batch_size=6,
-    num_workers=48,
+    batch_size=1,
+    num_workers=4,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
