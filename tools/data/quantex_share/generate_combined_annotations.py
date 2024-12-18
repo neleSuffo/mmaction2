@@ -1,16 +1,8 @@
 import json
-import logging
 from pathlib import Path
 from typing import Dict
-
-# List of labels to include in the ActivityNet format
-list_to_include = [
-    'Playing with Object',
-    'Watching Something',
-    'Drawing',
-    'Crafting Things',
-    'Dancing',
-]
+from dynaconf import Dynaconf
+import config 
 
 # Function to read JSON from a file
 def read_json(file_path: str) -> Dict:
@@ -52,7 +44,7 @@ def convert_annotations(data: Dict, fps: float = 30.0) -> Dict:
                 # Collect all "name" entries in a list
                 names = [attr["name"] for timestamp in timestamps for attr in timestamp.get("attributes", [])]
                 # Find the first name that is in the list_to_include
-                label = next((name for name in names if name in list_to_include), None)
+                label = next((name for name in names if name in config.ActivityLocalization.activities_to_include), None)
                 # Add the annotation if a label was found
                 if label is not None:
                     segment = [start_time / 1_000_000.0, end_time / 1_000_000.0]
@@ -71,14 +63,10 @@ def process_all_json_files(folder_path: Path,
                            fps: float = 30.0) -> Dict:
     all_annotations = {}
     
-    # Set up logging
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    logger = logging.getLogger(__name__)
-    
     # Find all JSON files in the specified folder
     json_files = list(folder_path.rglob("*.json"))
     num_files = len(json_files)
-    logger.info(f"Found {num_files} JSON files in the folder {folder_path}")
+    config.logger.info(f"Found {num_files} JSON files in the folder {folder_path}")
     file_counter = 0
     
     # Iterate over all files in the specified folder
@@ -98,9 +86,7 @@ def process_all_json_files(folder_path: Path,
     # Save combined_annotations as a JSON file
     with open(output_file, 'w') as file:
         json.dump(all_annotations, file, indent=4)
-    logger.info(f"Saved {file_counter} combined annotations to {output_file}")
+    config.logger.info(f"Saved {file_counter} combined annotations to {output_file}")
 
 if __name__ == '__main__':
-    input_dir = Path("/home/nele_pauline_suffo/ProcessedData/annotations_superannotate")
-    output_file = Path("/home/nele_pauline_suffo/ProcessedData/annotations_superannotate/childlens_annotations.json")
-    process_all_json_files(input_dir, output_file)
+    process_all_json_files(config.ActivityLocalization.annotations_dir, config.ActivityLocalization.combined_annotation_path)
