@@ -5,12 +5,24 @@ import os
 import os.path as osp
 import sys
 import warnings
+import logging
 from multiprocessing import Lock, Pool
 
 import mmcv
 import numpy as np
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
 
+def process_batches(video_list, batch_size):
+    """Create batches from the video list."""
+    video_list = list(video_list)  # Convert zip object to a list
+    for i in range(0, len(video_list), batch_size):
+        yield video_list[i:i + batch_size]
+        
 def extract_frame(vid_item):
     """Generate optical flow using dense flow.
 
@@ -268,11 +280,25 @@ if __name__ == '__main__':
 
     lock = Lock()
     pool = Pool(args.num_worker, initializer=init, initargs=(lock, ))
-    pool.map(
-        extract_frame,
-        zip(fullpath_list, vid_list, range(len(vid_list)),
-            len(vid_list) * [args.flow_type],
-            len(vid_list) * [args.task],
-            len(vid_list) * [args.report_file]))
+
+    # Batch size
+    batch_size = 3  # Number of videos to process at a time
+
+    # Convert zip to list for processing batches
+    video_data = list(zip(
+        fullpath_list, vid_list, range(len(vid_list)),
+        len(vid_list) * [args.flow_type],
+        len(vid_list) * [args.task],
+        len(vid_list) * [args.report_file]
+    ))
+
+    # Process in batches
+    for batch_index, batch in enumerate(process_batches(video_data, batch_size)):
+        logging.info(f"Processing batch {batch_index + 1}/{(len(video_data) + batch_size - 1) // batch_size}")
+        batch_video_ids = [item[1] for item in batch]  # Extract video IDs for logging
+        logging.info(f"Batch contains videos: {batch_video_ids}")
+        pool.map(extract_frame, batch)
+        logging.info(f"Batch {batch_index + 1} completed.")
+
     pool.close()
     pool.join()
