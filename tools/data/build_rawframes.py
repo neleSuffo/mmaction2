@@ -4,18 +4,13 @@ import glob
 import os
 import os.path as osp
 import sys
+import config
 import warnings
 import logging
 from multiprocessing import Lock, Pool
 
 import mmcv
 import numpy as np
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
 
 def process_batches(video_list, batch_size):
     """Create batches from the video list."""
@@ -84,47 +79,47 @@ def extract_frame(vid_item):
         else:
             if args.new_short == 0:
                 cmd = osp.join(
-                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                    f"'{config.Paths.denseflow_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                     f' -nw={args.new_width} -nh={args.new_height} -v')
             else:
                 cmd = osp.join(
-                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                    f"'{config.Paths.denseflow_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                     f' -ns={args.new_short} -v')
             run_success = os.system(cmd)
     elif task == 'flow':
         if args.input_frames:
             if args.new_short == 0:
                 cmd = osp.join(
-                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -nw={args.new_width} --nh={args.new_height} -v --if')
             else:
                 cmd = osp.join(
-                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -ns={args.new_short} -v --if')
         else:
             if args.new_short == 0:
                 cmd = osp.join(
-                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -nw={args.new_width} --nh={args.new_height} -v')
             else:
                 cmd = osp.join(
-                    f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -ns={args.new_short} -v')
         run_success = os.system(cmd)
     else:        
         if args.new_short == 0:
             cmd_rgb = osp.join(
-                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                f"'{config.Paths.denseflow_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                 f' -nw={args.new_width} -nh={args.new_height} -v')
             cmd_flow = osp.join(
-                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                 f' -nw={args.new_width} -nh={args.new_height} -v')
         else:
             cmd_rgb = osp.join(
-                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                f"'{config.Paths.denseflow_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                 f' -ns={args.new_short} -v')
             cmd_flow = osp.join(
-                f"/home/nele_pauline_suffo/app/bin/denseflow '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                 f' -ns={args.new_short} -v')
         run_success_rgb = os.system(cmd_rgb)
         run_success_flow = os.system(cmd_flow)
@@ -132,7 +127,7 @@ def extract_frame(vid_item):
             run_success = 0
 
     if run_success == 0:
-        print(f'{task} {vid_id} {vid_path} {method} done')
+        logging.info(f'{task} {vid_id} {vid_path} {method} done')
         sys.stdout.flush()
 
         lock.acquire()
@@ -141,7 +136,7 @@ def extract_frame(vid_item):
             f.write(line)
         lock.release()
     else:
-        print(f'{task} {vid_id} {vid_path} {method} got something wrong')
+        logging.error(f'{task} {vid_id} {vid_path} {method} got something wrong')
         sys.stdout.flush()
 
     return True
@@ -232,7 +227,7 @@ if __name__ == '__main__':
     args = parse_args()
 
     if not osp.isdir(args.out_dir):
-        print(f'Creating folder: {args.out_dir}')
+        logging.info(f'Creating folder: {args.out_dir}')
         os.makedirs(args.out_dir)
 
     if args.level == 2:
@@ -240,23 +235,23 @@ if __name__ == '__main__':
         for classname in classes:
             new_dir = osp.join(args.out_dir, classname)
             if not osp.isdir(new_dir):
-                print(f'Creating folder: {new_dir}')
+                logging.info(f'Creating folder: {new_dir}')
                 os.makedirs(new_dir)
 
     if args.input_frames:
-        print('Reading rgb frames from folder: ', args.src_dir)
+        logging.info('Reading rgb frames from folder: ', args.src_dir)
         fullpath_list = glob.glob(args.src_dir + '/*' * args.level)
-        print('Total number of rgb frame folders found: ', len(fullpath_list))
+        logging.info('Total number of rgb frame folders found: ', len(fullpath_list))
     else:
-        print('Reading videos from folder: ', args.src_dir)
+        logging.info('Reading videos from folder: ', args.src_dir)
         if args.mixed_ext:
-            print('Extension of videos is mixed')
+            logging.info('Extension of videos is mixed')
             fullpath_list = glob.glob(args.src_dir + '/*' * args.level)
         else:
-            print('Extension of videos: ', args.ext)
+            logging.info('Extension of videos: ', args.ext)
             fullpath_list = glob.glob(args.src_dir + '/*' * args.level + '.' +
                                       args.ext)
-        print('Total number of videos found: ', len(fullpath_list))
+        logging.info('Total number of videos found: ', len(fullpath_list))
 
     if args.resume:
         done_fullpath_list = []
@@ -294,11 +289,11 @@ if __name__ == '__main__':
 
     # Process in batches
     for batch_index, batch in enumerate(process_batches(video_data, batch_size)):
-        logging.info(f"Processing batch {batch_index + 1}/{(len(video_data) + batch_size - 1) // batch_size}")
+        config.logging.info(f"Processing batch {batch_index + 1}/{(len(video_data) + batch_size - 1) // batch_size}")
         batch_video_ids = [item[1] for item in batch]  # Extract video IDs for logging
-        logging.info(f"Batch contains videos: {batch_video_ids}")
+        config.logging.info(f"Batch contains videos: {batch_video_ids}")
         pool.map(extract_frame, batch)
-        logging.info(f"Batch {batch_index + 1} completed.")
+        config.logging.info(f"Batch {batch_index + 1} completed.")
 
     pool.close()
     pool.join()
