@@ -11,10 +11,10 @@ def load_json(file_path):
         return data
 
 # Load annotation files
-annotation_database = load_json(config.ActivityLocalization.combined_annotation_path)
+annotation_database = load_json(config.AnnotationProcessing.combined_annotation_path)
 
 # load video info file with information about subset
-video_records = np.loadtxt(config.ActivityLocalization.video_info_path, dtype=str, delimiter=',', skiprows=1)
+video_records = np.loadtxt(config.VideoProcessing.video_info_path, dtype=str, delimiter=',', skiprows=1)
 
 video_dict_train = {}
 video_dict_val = {}
@@ -41,7 +41,7 @@ config.logger.info(f"Training videos: {len(video_dict_train)}")
 config.logger.info(f"Validation videos: {len(video_dict_val)}")
 config.logger.info(f"Testing videos: {len(video_dict_test)}")
 
-output_dir = config.ActivityLocalization.bmn_preprocessing_dir
+output_dir = config.VideoProcessing.bmn_preprocessing_dir
 with open(f'{output_dir}/anno_train.json', 'w') as result_file:
     json.dump(video_dict_train, result_file)
 
