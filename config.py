@@ -30,6 +30,19 @@ class ActivityLocalization:
     video_info_path = Path(f'{annotations_dir}/video_info.csv')
     bmn_preprocessing_dir = '/home/nele_pauline_suffo/ProcessedData/bmn_preprocessing'
 
+class FrameExtraction:
+    #parameters needed when running extract_frames.py
+    video_input_dir = "/home/nele_pauline_suffo/ProcessedData/videos_superannotate_all"
+    rawframes_output_dir = "/home/nele_pauline_suffo/ProcessedData/videos_superannotate/rawframes"
+    # whether video files are stored as .mp4 or .MP4
+    video_ext = "MP4"
+    # extract only "rgb", "flow" or "both"
+    task = "both"
+    # keep as is
+    new_short = 256
+    level = 1
+    flow_type = "tvl1"
+    resume = True
 
 
 
