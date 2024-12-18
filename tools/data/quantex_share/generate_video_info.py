@@ -9,7 +9,7 @@ def load_annotations(json_file: str) -> Dict:
         annotations = json.load(f)
     return annotations
 
-def split_videos(annotations: Dict, train_ratio: float = config.ActivityLocalization.childlens_train_ratio) -> Tuple[Dict, Dict]:
+def split_videos(annotations: Dict, train_ratio: float = config.VideoProcessing.childlens_train_ratio) -> Tuple[Dict, Dict]:
     video_list = [(video_id, data['duration_second']) for video_id, data in annotations.items()]
     video_list.sort(key=lambda x: x[1], reverse=True)  # Sort by duration
 
@@ -62,5 +62,5 @@ def generate_video_info_csv(annotations: Dict, output_csv: str):
 
 
 if __name__ == '__main__':
-    annotations = load_annotations(config.ActivityLocalization.combined_annotation_path)
-    generate_video_info_csv(annotations, config.ActivityLocalization.video_info_path)
+    annotations = load_annotations(config.AnnotationProcessing.combined_annotation_path)
+    generate_video_info_csv(annotations, config.VideoProcessing.video_info_path)
