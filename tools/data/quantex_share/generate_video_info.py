@@ -1,5 +1,6 @@
 import json
 import csv
+import config
 import os
 from typing import Dict, Tuple
 
@@ -8,7 +9,7 @@ def load_annotations(json_file: str) -> Dict:
         annotations = json.load(f)
     return annotations
 
-def split_videos(annotations: Dict, train_ratio: float = 0.8) -> Tuple[Dict, Dict]:
+def split_videos(annotations: Dict, train_ratio: float = config.ActivityLocalization.childlens_train_ratio) -> Tuple[Dict, Dict]:
     video_list = [(video_id, data['duration_second']) for video_id, data in annotations.items()]
     video_list.sort(key=lambda x: x[1], reverse=True)  # Sort by duration
 
@@ -27,7 +28,8 @@ def split_videos(annotations: Dict, train_ratio: float = 0.8) -> Tuple[Dict, Dic
         else:
             validation[video_id] = annotations[video_id]
             val_duration += duration
-
+    
+    config.logger.info(f"Split videos into {len(training)} training and {len(validation)} validation")
     return training, validation
 
 def generate_video_info_csv(annotations: Dict, output_csv: str):
@@ -56,11 +58,9 @@ def generate_video_info_csv(annotations: Dict, output_csv: str):
                     'subset': subset,
                     'featureFrame': feature_frame
                 })
+    config.logger.info(f"Saved video information to {output_csv}")
+
 
 if __name__ == '__main__':
-    annotations_dir = '/home/nele_pauline_suffo/ProcessedData/annotations_superannotate'
-    json_file = f'{annotations_dir}/childlens_annotations.json'  # annotation file
-    output_csv = f'{annotations_dir}/video_info.csv'
-
-    annotations = load_annotations(json_file)
-    generate_video_info_csv(annotations, output_csv)
+    annotations = load_annotations(config.ActivityLocalization.combined_annotation_path)
+    generate_video_info_csv(annotations, config.ActivityLocalization.video_info_path)
