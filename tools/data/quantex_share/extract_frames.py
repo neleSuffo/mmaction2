@@ -5,6 +5,7 @@ import config
 def main():
     # Store the current directory for returning back later
     original_dir = os.getcwd()
+    current_dir_name = os.path.basename(original_dir)  # Get the name of the current directory
 
     try:
         # Change to the parent directory
@@ -35,13 +36,13 @@ def main():
         # Change directory back to original
         os.chdir(original_dir)
         
-        # Change to "quantex_share" directory
-        quantex_dir = os.path.join(original_dir, "quantex_share")
-        if os.path.exists(quantex_dir):
-            os.chdir(quantex_dir)
-            print(f"Changed to directory: {quantex_dir}")
+        # Change back to the directory with the name stored earlier
+        target_dir = os.path.join(original_dir, current_dir_name)
+        if os.path.exists(target_dir):
+            os.chdir(target_dir)
+            print(f"Changed back to directory: {target_dir}")
         else:
-            print(f"Directory 'quantex_share' does not exist in {original_dir}")
+            print(f"Directory '{current_dir_name}' does not exist in {original_dir}")
 
 if __name__ == "__main__":
     main()
