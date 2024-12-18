@@ -19,11 +19,16 @@ class ActivityLocalization:
     # directory with individual json annotations files
     annotations_dir = Path("/home/nele_pauline_suffo/ProcessedData/annotations_superannotate")
     # Path to file that contains all annotations combined (generated from generate_combined_annotations.py)
-    combined_annotation_path = Path("/home/nele_pauline_suffo/ProcessedData/annotations_superannotate/childlens_annotations.json")
+    combined_annotation_path = Path(f'{annotations_dir}/childlens_annotations.json')
     # List of labels to include in combined json file in "projects/mmaction2/tools/data/quantex_share/generate_combined_annotations.py"
     activities_to_include = [
     "Playing with Object",
     ]
+    # train ratio for splitting videos into training and validation
+    childlens_train_ratio: float = 0.8
+    # Path to file that contains video information like number of frames, training and testing assignment(generated from generate_video_info.py)
+    video_info_path = Path(f'{annotations_dir}/video_info.csv')
+
 
 output_dir = "/home/nele_pauline_suffo/ProcessedData/annotations_superannotate"
 data_file = "/home/nele_pauline_suffo/ProcessedData/bmn_preprocessing"
