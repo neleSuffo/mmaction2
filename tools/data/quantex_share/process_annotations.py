@@ -2,34 +2,33 @@
 """This file processes the annotation files and generates proper annotation
 files for localizers."""
 import json
+import config
 import numpy as np
     
-def load_json(file):
-    with open(file) as json_file:
+def load_json(file_path):
+    with open(file_path, 'r') as json_file:
         data = json.load(json_file)
         return data
 
+# Load annotation files
+annotation_database = load_json(config.ActivityLocalization.combined_annotation_path)
 
-data_file = '/home/nele_pauline_suffo/ProcessedData/annotations_superannotate'
-info_file = f'{data_file}/video_info.csv'
-ann_file = f'{data_file}/childlens_annotations.json'
-
-anno_database = load_json(ann_file)
-
-video_record = np.loadtxt(info_file, dtype=str, delimiter=',', skiprows=1)
+# load video info file with information about subset
+video_records = np.loadtxt(config.ActivityLocalization.video_info_path, dtype=str, delimiter=',', skiprows=1)
 
 video_dict_train = {}
 video_dict_val = {}
 video_dict_test = {}
 video_dict_full = {}
 
-for _, video_item in enumerate(video_record):
-    video_name = video_item[0]
-    video_info = anno_database[video_name]
-    video_subset = video_item[5]
-    video_info['fps'] = video_item[3].astype(np.float64)
-    video_info['rfps'] = video_item[4].astype(np.float64)
+for _, video_record in enumerate(video_records):
+    video_name = video_record[0]
+    video_info = annotation_database[video_name]
+    video_subset = video_record[5]
+    video_info['fps'] = float(video_record[3])
+    video_info['rfps'] = float(video_record[4])
     video_dict_full[video_name] = video_info
+
     if video_subset == 'training':
         video_dict_train[video_name] = video_info
     elif video_subset == 'testing':
@@ -37,9 +36,12 @@ for _, video_item in enumerate(video_record):
     elif video_subset == 'validation':
         video_dict_val[video_name] = video_info
 
-print(f'full subset video numbers: {len(video_record)}')
+config.logger.info(f"Total videos processed: {len(video_records)}")
+config.logger.info(f"Training videos: {len(video_dict_train)}")
+config.logger.info(f"Validation videos: {len(video_dict_val)}")
+config.logger.info(f"Testing videos: {len(video_dict_test)}")
 
-output_dir = '/home/nele_pauline_suffo/ProcessedData/bmn_preprocessing'
+output_dir = config.ActivityLocalization.bmn_preprocessing_dir
 with open(f'{output_dir}/anno_train.json', 'w') as result_file:
     json.dump(video_dict_train, result_file)
 
