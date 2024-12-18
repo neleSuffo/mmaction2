@@ -1,9 +1,7 @@
 import json
 from pathlib import Path
 from typing import Dict
-from dynaconf import Dynaconf
-import config 
-
+import config
 # Function to read JSON from a file
 def read_json(file_path: str) -> Dict:
     with open(file_path, 'r') as file:
@@ -44,7 +42,7 @@ def convert_annotations(data: Dict, fps: float = 30.0) -> Dict:
                 # Collect all "name" entries in a list
                 names = [attr["name"] for timestamp in timestamps for attr in timestamp.get("attributes", [])]
                 # Find the first name that is in the list_to_include
-                label = next((name for name in names if name in config.ActivityLocalization.activities_to_include), None)
+                label = next((name for name in names if name in config.AnnotationProcessing.activities_to_include), None)
                 # Add the annotation if a label was found
                 if label is not None:
                     segment = [start_time / 1_000_000.0, end_time / 1_000_000.0]
@@ -89,4 +87,4 @@ def process_all_json_files(folder_path: Path,
     config.logger.info(f"Saved {file_counter} combined annotations to {output_file}")
 
 if __name__ == '__main__':
-    process_all_json_files(config.ActivityLocalization.annotations_dir, config.ActivityLocalization.combined_annotation_path)
+    process_all_json_files(config.AnnotationProcessing.annotations_dir, config.AnnotationProcessing.combined_annotation_path)
