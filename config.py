@@ -28,10 +28,11 @@ class ActivityLocalization:
     childlens_train_ratio: float = 0.8
     # Path to file that contains video information like number of frames, training and testing assignment(generated from generate_video_info.py)
     video_info_path = Path(f'{annotations_dir}/video_info.csv')
+    bmn_preprocessing_dir = '/home/nele_pauline_suffo/ProcessedData/bmn_preprocessing'
 
 
-output_dir = "/home/nele_pauline_suffo/ProcessedData/annotations_superannotate"
-data_file = "/home/nele_pauline_suffo/ProcessedData/bmn_preprocessing"
+
+
 rawframe_dir = "/home/nele_pauline_suffo/ProcessedData/bmn_preprocessing/rawframes"
 video_dir = "/home/nele_pauline_suffo/ProcessedData/videos_superannotate_all"
 action_name_list = "/home/nele_pauline_suffo/ProcessedData/annotations_superannotate/action_name.csv"
