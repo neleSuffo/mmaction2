@@ -84,7 +84,7 @@ def generate_rawframes_filelist():
 
     with open(config.FrameExtraction.train_video_txt_path, 'w') as fout:
         fout.write('\n'.join(train_lines))
-    with open(onfig.FrameExtraction.val_video_txt_path, 'w') as fout:
+    with open(config.FrameExtraction.val_video_txt_path, 'w') as fout:
         fout.write('\n'.join(val_lines))
 
     def get_video_info(video_path):
