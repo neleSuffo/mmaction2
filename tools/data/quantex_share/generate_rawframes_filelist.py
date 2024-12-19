@@ -82,9 +82,9 @@ def generate_rawframes_filelist():
         for k in validation
     ]
 
-    with open(osp.join(data_file, config.FrameExtraction.train_video_txt_path), 'w') as fout:
+    with open(config.FrameExtraction.train_video_txt_path, 'w') as fout:
         fout.write('\n'.join(train_lines))
-    with open(osp.join(data_file, config.FrameExtraction.val_video_txt_path), 'w') as fout:
+    with open(onfig.FrameExtraction.val_video_txt_path, 'w') as fout:
         fout.write('\n'.join(val_lines))
 
     def get_video_info(video_path):
@@ -123,9 +123,9 @@ def generate_rawframes_filelist():
     for k in validation:
         val_clips.extend(clip_list(k, annotations[key_dict[k]]))
 
-    with open(osp.join(data_file, config.FrameExtraction.train_clip_txt_path), 'w') as fout:
+    with open(config.FrameExtraction.train_clip_txt_path, 'w') as fout:
         fout.write('\n'.join(train_clips))
-    with open(osp.join(data_file, config.FrameExtraction.val_clip_txt_path), 'w') as fout:
+    with open(config.FrameExtraction.val_clip_txt_path, 'w') as fout:
         fout.write('\n'.join(val_clips))
 
 if __name__ == '__main__':
