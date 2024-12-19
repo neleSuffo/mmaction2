@@ -25,7 +25,20 @@ class AnnotationProcessing:
     # List of labels to include in combined json file in "projects/mmaction2/tools/data/quantex_share/generate_combined_annotations.py"
     activities_to_include = [
     "Playing with Object",
+    "Drawing",
+    "Reading a Book"
     ]
+    # activities_to_include = [
+    # "Playing with Object",
+    # "Playing without Object",
+    # "Watching Something",
+    # "Drawing",
+    # "Crafting Things",
+    # "Dancing",
+    # "Making Music",
+    # "Pretend play",
+    # "Reading a Book",
+    # ]
     activity_names_list = f'{annotations_dir}/action_name.csv'
     
 class VideoProcessing:
@@ -39,8 +52,8 @@ class FrameExtraction:
     #parameters needed when running extract_frames.py & generate_rawframes_filelist.py
     train_video_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_video.txt")
     val_video_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_val_video.txt")
-    train_clips_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_clip.txt")
-    val_clips_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_val_clip.txt")
+    train_clip_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_clip.txt")
+    val_clip_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_val_clip.txt")
     video_input_dir = Path(f"{data_dir}/videos_superannotate_all")
     rawframes_output_dir = Path(f"{data_dir}/videos_superannotate/rawframes")
     # whether video files are stored as .mp4 or .MP4
