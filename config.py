@@ -61,3 +61,7 @@ class FeatureExtraction:
     rgb_output_dir = Path(f"{data_dir}/videos_superannotate/features_rgb")
     flow_output_dir = Path(f"{data_dir}/videos_superannotate/features_flow")
     video_list = f"/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/{dataset_name}_train_clip.txt"
+    # interval (in frames) between the centers of adjacent clips.
+    clip_interval = 16
+    #interval (in frames) between consecutive frames in a clip
+    frame_interval = 2
