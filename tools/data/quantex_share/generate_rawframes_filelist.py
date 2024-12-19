@@ -2,35 +2,29 @@ import json
 import os
 import os.path as osp
 import cv2
+import config
 import csv
 
-annotations_dir = '/home/nele_pauline_suffo/ProcessedData/annotations_superannotate'
-json_file = f'{annotations_dir}/childlens_annotations.json'  # annotation file
-video_info_file = f'{annotations_dir}/video_info.csv'  # video info file
-action_name_list = f'{annotations_dir}/action_name.csv'
-
-data_file = '/home/nele_pauline_suffo/ProcessedData/bmn_preprocessing'  # output directory
-rawframe_dir = f'{data_file}/rawframes'  # extracted rawframes
-video_dir = '/home/nele_pauline_suffo/ProcessedData/videos_superannotate_all'
-
-train_rawframe_dir = rawframe_dir
-val_rawframe_dir = rawframe_dir
+train_rawframe_dir = config.FrameExtraction.rawframes_output_dir
+val_rawframe_dir = config.FrameExtraction.rawframes_output_dir
 
 def load_video_info(video_info_file):
+    config.logger.info(f"Loading video info from {video_info_file}")
     video_info = {}
     with open(video_info_file, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            video_id = row['video'].replace('v_', '')
+            video_id = row['video']
             video_info[video_id] = row
     return video_info
 
 def generate_rawframes_filelist():
-    annotations = json.load(open(json_file))
-    video_info = load_video_info(video_info_file)
+    config.logger.info(f"Loading annotations from {config.AnnotationProcessing.combined_annotation_path}")
+    annotations = json.load(open(config.AnnotationProcessing.combined_annotation_path))
+    video_info = load_video_info(config.VideoProcessing.video_info_path)
 
-    childlens_labels = open(action_name_list).readlines()
-    childlens_labels = [x.strip() for x in childlens_labels[1:]]
+    labels = open(config.AnnotationProcessing.activity_names_list).readlines()
+    labels = [x.strip() for x in labels[1:]]
 
     train_dir_list = [
         osp.join(train_rawframe_dir, x) for x in os.listdir(train_rawframe_dir)
@@ -39,9 +33,9 @@ def generate_rawframes_filelist():
         osp.join(val_rawframe_dir, x) for x in os.listdir(val_rawframe_dir)
     ]
 
-    def simple_label(anno):
-        label = anno[0]['label']
-        return childlens_labels.index(label)
+    def simple_label(annotation):
+        label = annotation[0]['label']
+        return labels.index(label)
     
     def count_frames(dir_list, video):
         for dir_name in dir_list:
@@ -59,6 +53,7 @@ def generate_rawframes_filelist():
     key_dict = {}
 
     for video_id in annotations:
+        config.logging.info(f"Processing video {video_id}")
         data = annotations[video_id]
         subset = video_info[video_id]['subset']
 
@@ -87,9 +82,9 @@ def generate_rawframes_filelist():
         for k in validation
     ]
 
-    with open(osp.join(data_file, 'childlens_train_video.txt'), 'w') as fout:
+    with open(osp.join(data_file, config.FrameExtraction.train_video_txt_path), 'w') as fout:
         fout.write('\n'.join(train_lines))
-    with open(osp.join(data_file, 'childlens_val_video.txt'), 'w') as fout:
+    with open(osp.join(data_file, config.FrameExtraction.val_video_txt_path), 'w') as fout:
         fout.write('\n'.join(val_lines))
 
     def get_video_info(video_path):
@@ -103,13 +98,13 @@ def generate_rawframes_filelist():
         return fps, num_frames
     
     def clip_list(k, anno):
-        fps, num_frames = get_video_info(osp.join(video_dir, k + '.MP4'))
+        fps, num_frames = get_video_info(osp.join(video_dir, k + config.video_ext))
         annotations = anno['annotations']
         lines = []
         for annotation in annotations:
             segment = annotation['segment']
             label = annotation['label']
-            label = childlens_labels.index(label)
+            label = labels.index(label)
             start, end = int(segment[0] * fps), int(segment[1] * fps)
             duration = end - start + 1
             if end > num_frames - 1:
@@ -128,9 +123,9 @@ def generate_rawframes_filelist():
     for k in validation:
         val_clips.extend(clip_list(k, annotations[key_dict[k]]))
 
-    with open(osp.join(data_file, 'childlens_train_clip.txt'), 'w') as fout:
+    with open(osp.join(data_file, config.FrameExtraction.train_clip_txt_path), 'w') as fout:
         fout.write('\n'.join(train_clips))
-    with open(osp.join(data_file, 'childlens_val_clip.txt'), 'w') as fout:
+    with open(osp.join(data_file, config.FrameExtraction.val_clip_txt_path), 'w') as fout:
         fout.write('\n'.join(val_clips))
 
 if __name__ == '__main__':
