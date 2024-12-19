@@ -2,7 +2,8 @@
 import argparse
 import os
 import os.path as osp
-
+import config
+import torch
 from mmengine import dump, list_from_file, load
 from mmengine.config import Config, DictAction
 from mmengine.runner import Runner
@@ -151,6 +152,7 @@ def merge_args(cfg, args):
     args.video_root = cfg.test_dataloader.dataset.data_prefix
     # use UntrimmedSampleFrames for long video inference
     if args.long_video_mode:
+        config.logging.info('Performing long video inference.')
         # preserve features of multiple clips
         cfg.model.cls_head['average_clips'] = None
         cfg.test_dataloader.batch_size = 1
@@ -229,18 +231,30 @@ def merge_args(cfg, args):
 
 
 def split_feats(args):
+    config.logger.info("Splitting features and saving individual files.")
     total_feats = load(args.dump)
+    
+    # If you're dumping prediction scores instead of features
     if args.dump_score:
         total_feats = [sample['pred_scores']['item'] for sample in total_feats]
 
     video_list = list_from_file(args.video_list)
     video_list = [line.split(' ')[0] for line in video_list]
 
+    # Process each video sequentially
     for video_name, feature in zip(video_list, total_feats):
+        config.logger.debug(f"Saving features for video: {video_name}")
+        
+        # Save the features for the current video
         dump(feature, osp.join(args.output_prefix, video_name + '.pkl'))
+        
+        # Explicitly clear GPU memory after processing each video
+        torch.cuda.empty_cache()  # This ensures the memory is freed after each video
+
+    # After processing all videos, remove the total features dump file
     os.remove(args.dump)
-
-
+    config.logger.info("Feature splitting completed.")
+    
 def main():
     args = parse_args()
 
