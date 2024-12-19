@@ -37,10 +37,10 @@ class VideoProcessing:
 
 class FrameExtraction:
     #parameters needed when running extract_frames.py & generate_rawframes_filelist.py
-    train_video_txt_path = Path(f"{bmn_preprocessing_dir}/{dataset_name}_train_video.txt")
-    val_video_txt_path = Path(f"{bmn_preprocessing_dir}/{dataset_name}_val_video.txt")
-    train_clips_txt_path = Path(f"{bmn_preprocessing_dir}/{dataset_name}_train_clip.txt")
-    val_clips_txt_path = Path(f"{bmn_preprocessing_dir}/{dataset_name}_val_clip.txt")
+    train_video_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_video.txt")
+    val_video_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_val_video.txt")
+    train_clips_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_clip.txt")
+    val_clips_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_val_clip.txt")
     video_input_dir = Path(f"{data_dir}/videos_superannotate_all")
     rawframes_output_dir = Path(f"{data_dir}/videos_superannotate/rawframes")
     # whether video files are stored as .mp4 or .MP4
