@@ -71,9 +71,9 @@ class FeatureExtraction:
     rgb_config_file = "tsn_extract_rgb_feat_config.py"
     flow_config_file = "tsn_extract_flow_feat_config.py"
     pretrained_model_url = ("https://download.openmmlab.com/mmaction/v1.0/recognition/tsn/tsn_imagenet-pretrained-r50_8xb32-1x1x3-100e_kinetics400-rgb/tsn_imagenet-pretrained-r50_8xb32-1x1x3-100e_kinetics400-rgb_20220906-cd10898e.pth")
-    rgb_output_dir = Path(f"{data_dir}/videos_superannotate/features_rgb")
-    flow_output_dir = Path(f"{data_dir}/videos_superannotate/features_flow")
-    video_list = f"/home/nele_pauline_suffo/projects/mmaction2/data/quantex_share/{dataset_name}_train_clip.txt"
+    rgb_output_dir = Path(f"{VideoProcessing.bmn_preprocessing_dir}/features_rgb")
+    flow_output_dir = Path(f"{VideoProcessing.bmn_preprocessing_dir}/features_flow")
+    video_list = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_video.txt")
     # interval (in frames) between the centers of adjacent clips.
     clip_interval = 16
     #interval (in frames) between consecutive frames in a clip
