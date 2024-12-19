@@ -4,20 +4,26 @@ import logging
 def generate_rgb_command():
     """Generate the command for RGB feature extraction."""
     command = (
-        f"python ../../misc/clip_feature_extraction.py {config.RGB.config_file} "
-        f"{config.RGB.model_url} {config.RGB.output_dir} "
-        f"--video-list {config.RGB.video_list} "
-        f"--video-root {config.RGB.video_root}"
+        f"python ../../misc/clip_feature_extraction.py {config.pretrained_model_url.rgb_config_file} "
+        f"{config.FeatureExtraction.pretrained_model_url} {config.FeatureExtraction.rgb_output_dir} "
+        f"--video-list {config.FeatureExtraction.video_list} "
+        f"--video-root {config.FrameExtraction.rawframes_output_dir}"
+        f"--long-video-mode "
+        f"--clip-interval {config.FeatureExtraction.clip_interval} "
+        f"--frame-interval {config.FeatureExtraction.frame_interval}"
     )
     return command
 
 def generate_flow_command():
     """Generate the command for Flow feature extraction."""
     command = (
-        f"python ../../misc/clip_feature_extraction.py {config.Flow.config_file} "
-        f"{config.Flow.model_url} {config.Flow.output_dir} "
-        f"--video-list {config.Flow.video_list} "
-        f"--video-root {config.Flow.video_root} > output.txt"
+        f"python ../../misc/clip_feature_extraction.py {config.pretrained_model_url.flow_config_file} "
+        f"{config.FeatureExtraction.pretrained_model_url} {config.FeatureExtraction.flow_output_dir} "
+        f"--video-list {config.FeatureExtraction.video_list} "
+        f"--video-root {config.FrameExtraction.rawframes_output_dir} "
+        f"--long-video-mode "
+        f"--clip-interval {config.FeatureExtraction.clip_interval} "
+        f"--frame-interval {config.FeatureExtraction.frame_interval}"
     )
     return command
 
