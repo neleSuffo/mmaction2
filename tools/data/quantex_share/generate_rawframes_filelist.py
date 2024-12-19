@@ -86,19 +86,11 @@ def generate_rawframes_filelist():
         fout.write('\n'.join(train_lines))
     with open(config.FrameExtraction.val_video_txt_path, 'w') as fout:
         fout.write('\n'.join(val_lines))
-
-    def get_video_info(video_path):
-        video = cv2.VideoCapture(video_path)
-        
-        # Get FPS and number of frames
-        fps = video.get(cv2.CAP_PROP_FPS)
-        num_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-        
-        video.release()
-        return fps, num_frames
     
-    def clip_list(k, anno):
-        fps, num_frames = get_video_info(osp.join(video_dir, k + config.video_ext))
+    def clip_list(k, anno, video_anno):
+        duration = anno['duration_frame']
+        num_frames = video_anno[0]
+        fps = num_frames / duration
         annotations = anno['annotations']
         lines = []
         for annotation in annotations:
@@ -119,9 +111,9 @@ def generate_rawframes_filelist():
 
     train_clips, val_clips = [], []
     for k in training:
-        train_clips.extend(clip_list(k, annotations[key_dict[k]]))
+        train_clips.extend(clip_list(k, annotations[key_dict[k]], training[k]))
     for k in validation:
-        val_clips.extend(clip_list(k, annotations[key_dict[k]]))
+        val_clips.extend(clip_list(k, annotations[key_dict[k]], validation[k]))
 
     with open(config.FrameExtraction.train_clip_txt_path, 'w') as fout:
         fout.write('\n'.join(train_clips))
