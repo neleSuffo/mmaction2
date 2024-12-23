@@ -45,8 +45,8 @@ def main():
     config.logging.info("Starting RGB feature extraction.")
     execute_command(rgb_command)
 
-    config.logging.info("Starting Flow feature extraction.")
-    execute_command(flow_command)
+    #config.logging.info("Starting Flow feature extraction.")
+    #execute_command(flow_command)
 
 if __name__ == "__main__":
     main()
