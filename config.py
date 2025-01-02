@@ -22,6 +22,7 @@ class AnnotationProcessing:
     annotations_dir = Path(f"{data_dir}/{dataset_name}_annotations")
     # Path to file that contains all annotations combined (generated from generate_combined_annotations.py)
     combined_annotation_path = Path(f"{annotations_dir}/{dataset_name}_annotations.json")
+    split_annotation_path = Path(f"{annotations_dir}/{dataset_name}_split_annotations.json")
     # List of labels to include in combined json file in "projects/mmaction2/tools/data/quantex_share/generate_combined_annotations.py"
     activities_to_include = [
     "Playing with Object",
@@ -54,8 +55,10 @@ class FrameExtraction:
     val_video_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_val_video.txt")
     train_clip_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_clip.txt")
     val_clip_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_val_clip.txt")
-    video_input_dir = Path(f"{data_dir}/videos_superannotate_all")
-    rawframes_output_dir = Path(f"{data_dir}/videos_superannotate/rawframes")
+    video_input_dir = Path(f"{data_dir}/childlens_videos")
+    videos_processed_dir = Path(f"{data_dir}/childlens_videos_processed")
+    rawframes_output_dir = Path(f"{videos_processed_dir}/rawframes")
+    rawframes_processed_dir = Path(f"{videos_processed_dir}/rawframes_split")
     # whether video files are stored as .mp4 or .MP4
     video_ext = "MP4"
     # extract only "rgb", "flow" or "both"
@@ -66,6 +69,9 @@ class FrameExtraction:
     flow_type = "tvl1"
     resume = True
     denseflow_installation_path = "/home/nele_pauline_suffo/app/bin/denseflow"
+    # number of frames in a chunk (video is split into chunks)
+    chunk_size = 4000
+    fps = 30.0
     
 class FeatureExtraction:
     rgb_config_file = "tsn_extract_rgb_feat_config.py"
@@ -75,6 +81,6 @@ class FeatureExtraction:
     flow_output_dir = Path(f"{VideoProcessing.bmn_preprocessing_dir}/features_flow")
     video_list = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_video.txt")
     # interval (in frames) between the centers of adjacent clips.
-    clip_interval = 16
+    clip_interval = 64
     #interval (in frames) between consecutive frames in a clip
-    frame_interval = 2
+    frame_interval = 8
