@@ -1,4 +1,5 @@
 import json
+import cv2
 from pathlib import Path
 from typing import Dict
 import config
@@ -9,16 +10,30 @@ def read_json(file_path: str) -> Dict:
         data = json.load(file)
     return data
 
-# Conversion function
+def get_frame_count(video_path):
+    # Open the vadeo file
+    video = cv2.VideoCapture(video_path)
+    
+    # Check if the video was opened successfully
+    if not video.isOpened():
+        raise ValueError(f"Could not open the video file: {video_path}")
+    
+    # Get the frame count
+    frame_count = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+    
+    # Release the video file
+    video.release()
+    
+    return frame_count
+
 def convert_annotations(data: Dict, fps: float = config.FrameExtraction.fps) -> Dict:
     converted_annotations = {}
     
     # Extract video ID, duration in seconds, and duration in frames
     video_id = data['metadata']['name']
     short_video_id = video_id.replace(".MP4", "")
-    duration_microseconds = data['metadata']['duration']
-    duration_seconds = duration_microseconds / 1_000_000.0
-    duration_frames = int(duration_seconds * fps)
+    duration_frames = get_frame_count(config.FrameExtraction.video_input_dir / video_id)
+    duration_seconds = int(duration_frames / fps)
     
     # Initialize the video data structure
     converted_annotations[short_video_id] = {
