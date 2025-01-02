@@ -42,6 +42,7 @@ def split_videos_and_frames(video_folder, rawframes_folder, output_folder, rawfr
             # Create a folder for the split rawframes
             split_rawframes_folder = os.path.join(rawframes_output_folder, new_video_base_name)
             os.makedirs(split_rawframes_folder, exist_ok=True)
+            config.logging.info(f"Created folder for split rawframes: {split_rawframes_folder}")
 
             # Construct the FFmpeg command
             command = (
@@ -76,7 +77,6 @@ def split_videos_and_frames(video_folder, rawframes_folder, output_folder, rawfr
                 frame_counter += 1
 
         logging.info(f"Finished processing video: {video_name}")
-        break
 
 if __name__ == "__main__":
     split_videos_and_frames(config.FrameExtraction.video_input_dir, config.FrameExtraction.rawframes_output_dir, config.FrameExtraction.videos_processed_dir, config.FrameExtraction.rawframes_processed_dir)
