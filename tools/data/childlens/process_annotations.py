@@ -11,7 +11,7 @@ def load_json(file_path):
         return data
 
 # Load annotation files
-annotation_database = load_json(config.AnnotationProcessing.combined_annotation_path)
+annotation_database = load_json(config.AnnotationProcessing.split_annotation_path)
 
 # load video info file with information about subset
 video_records = np.loadtxt(config.VideoProcessing.video_info_path, dtype=str, delimiter=',', skiprows=1)
