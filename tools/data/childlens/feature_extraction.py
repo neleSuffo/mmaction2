@@ -7,10 +7,7 @@ def generate_rgb_command():
         f"python ../../misc/clip_feature_extraction.py {config.FeatureExtraction.rgb_config_file} "
         f"{config.FeatureExtraction.pretrained_model_url} {config.FeatureExtraction.rgb_output_dir} "
         f"--video-list {config.FeatureExtraction.video_list} "
-        f"--video-root {config.FrameExtraction.rawframes_output_dir} "
-        f"--long-video-mode "
-        f"--clip-interval {config.FeatureExtraction.clip_interval} "
-        f"--frame-interval {config.FeatureExtraction.frame_interval}"
+        f"--video-root {config.FrameExtraction.rawframes_processed_dir} "
     )
     return command
 
@@ -20,10 +17,7 @@ def generate_flow_command():
         f"python ../../misc/clip_feature_extraction.py {config.FeatureExtraction.flow_config_file} "
         f"{config.FeatureExtraction.pretrained_model_url} {config.FeatureExtraction.flow_output_dir} "
         f"--video-list {config.FeatureExtraction.video_list} "
-        f"--video-root {config.FrameExtraction.rawframes_output_dir} "
-        f"--long-video-mode "
-        f"--clip-interval {config.FeatureExtraction.clip_interval} "
-        f"--frame-interval {config.FeatureExtraction.frame_interval}"
+        f"--video-root {config.FrameExtraction.rawframes_processed_dir} "
     )
     return command
 
@@ -42,11 +36,13 @@ def main():
     flow_command = generate_flow_command()
 
     # Execute commands
-    config.logging.info("Starting RGB feature extraction.")
-    execute_command(rgb_command)
+    #config.logging.info("Starting RGB feature extraction.")
+    #execute_command(rgb_command)
 
-    #config.logging.info("Starting Flow feature extraction.")
-    #execute_command(flow_command)
+    config.logging.info("Starting Flow feature extraction.")
+    execute_command(flow_command)
 
 if __name__ == "__main__":
     main()
+    
+    /home/nele_pauline_suffo/ProcessedData/childlens_videos_processed/rawframes_split/688731_11/flow_x_00505.jpg
