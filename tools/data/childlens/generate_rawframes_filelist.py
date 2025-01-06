@@ -5,8 +5,8 @@ import cv2
 import config
 import csv
 
-train_rawframe_dir = config.FrameExtraction.rawframes_output_dir
-val_rawframe_dir = config.FrameExtraction.rawframes_output_dir
+train_rawframe_dir = config.FrameExtraction.rawframes_processed_dir
+val_rawframe_dir = config.FrameExtraction.rawframes_processed_dir
 
 def load_video_info(video_info_file):
     config.logger.info(f"Loading video info from {video_info_file}")
@@ -19,8 +19,8 @@ def load_video_info(video_info_file):
     return video_info
 
 def generate_rawframes_filelist():
-    config.logger.info(f"Loading annotations from {config.AnnotationProcessing.combined_annotation_path}")
-    annotations = json.load(open(config.AnnotationProcessing.combined_annotation_path))
+    config.logger.info(f"Loading annotations from {config.AnnotationProcessing.split_annotation_path}")
+    annotations = json.load(open(config.AnnotationProcessing.split_annotation_path))
     video_info = load_video_info(config.VideoProcessing.video_info_path)
 
     labels = open(config.AnnotationProcessing.activity_names_list).readlines()
@@ -59,6 +59,9 @@ def generate_rawframes_filelist():
 
         if subset in ['training', 'validation']:
             video_annotations = data['annotations']
+            if not video_annotations:
+                config.logger.warning(f"No annotations found for video {video_id}. Skipping video.")
+                continue  # Skip the video if there are no annotations
             label = simple_label(video_annotations)
             if subset == 'training':
                 dir_list = train_dir_list
