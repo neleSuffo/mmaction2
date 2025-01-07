@@ -44,5 +44,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-    /home/nele_pauline_suffo/ProcessedData/childlens_videos_processed/rawframes_split/688731_11/flow_x_00505.jpg
