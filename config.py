@@ -16,13 +16,14 @@ logger = logging.getLogger(__name__)
 
 data_dir = Path("/home/nele_pauline_suffo/ProcessedData")
 dataset_name = "childlens"
+final_output_dir = Path(f"/home/nele_pauline_suffo/ProcessedData/{dataset_name}")
 
 class AnnotationProcessing:
     # directory with individual json annotations files
     annotations_dir = Path(f"{data_dir}/{dataset_name}_annotations")
     # Path to file that contains all annotations combined (generated from generate_combined_annotations.py)
     combined_annotation_path = Path(f"{annotations_dir}/{dataset_name}_annotations.json")
-    split_annotation_path = Path(f"{annotations_dir}/{dataset_name}_split_annotations.json")
+    split_annotation_path = Path(f"{final_output_dir}_split_annotations.json")
     # List of labels to include in combined json file in "projects/mmaction2/tools/data/quantex_share/generate_combined_annotations.py"
     activities_to_include = [
     "Playing with Object",
@@ -46,19 +47,19 @@ class VideoProcessing:
     # train ratio for splitting videos into training and validation
     train_test_ratio: float = 0.8
     # Path to file that contains video information like number of frames, training and testing assignment(generated from generate_video_info.py)
-    video_info_path = Path(f"{AnnotationProcessing.annotations_dir}/video_info.csv")
+    video_info_path = Path(f"{final_output_dir}/video_info.csv")
     bmn_preprocessing_dir = Path(f"{data_dir}/bmn_preprocessing")
 
 class FrameExtraction:
     #parameters needed when running extract_frames.py & generate_rawframes_filelist.py
-    train_video_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_video.txt")
-    val_video_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_val_video.txt")
-    train_clip_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_clip.txt")
-    val_clip_txt_path = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_val_clip.txt")
+    train_video_txt_path = Path(f"{final_output_dir}_train_video.txt")
+    val_video_txt_path = Path(f"{final_output_dir}_val_video.txt")
+    train_clip_txt_path = Path(f"{final_output_dir}_train_clip.txt")
+    val_clip_txt_path = Path(f"{final_output_dir}_val_clip.txt")
     video_input_dir = Path(f"{data_dir}/childlens_videos")
     videos_processed_dir = Path(f"{data_dir}/childlens_videos_processed")
     rawframes_output_dir = Path(f"{videos_processed_dir}/rawframes")
-    rawframes_processed_dir = Path(f"{videos_processed_dir}/rawframes_split")
+    rawframes_processed_dir = Path(f"{final_output_dir}/rawframes")
     # whether video files are stored as .mp4 or .MP4
     video_ext = "MP4"
     # extract only "rgb", "flow" or "both"
@@ -80,6 +81,8 @@ class FeatureExtraction:
     rgb_output_dir = Path(f"{VideoProcessing.bmn_preprocessing_dir}/features_rgb")
     flow_output_dir = Path(f"{VideoProcessing.bmn_preprocessing_dir}/features_flow")
     video_list = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_video.txt")
+    combined_feature_dir = Path(f"{final_output_dir}/mmaction_feat")
+    feature_output_format = "csv"
     # interval (in frames) between the centers of adjacent clips.
     clip_interval = 64
     #interval (in frames) between consecutive frames in a clip
