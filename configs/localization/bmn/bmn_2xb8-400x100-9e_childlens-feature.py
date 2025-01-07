@@ -1,14 +1,15 @@
+import config
 _base_ = [
     '../../_base_/models/bmn_400x100.py', '../../_base_/default_runtime.py'
 ]
 
 # dataset settings
 dataset_type = 'ActivityNetDataset'
-data_root = '/home/nele_pauline_suffo/ProcessedData/videos_superannotate/features_combined'
-data_root_val = '/home/nele_pauline_suffo/ProcessedData/videos_superannotate/features_combined'
-ann_file_train = 'data/quantex_share/anno_train.json'
-ann_file_val = 'data/quantex_share/anno_val.json'
-ann_file_test = 'data/quantex_share/anno_val.json'
+data_root = config.FeatureExtraction.combined_feature_dir
+data_root_val = config.FeatureExtraction.combined_feature_dir
+ann_file_train = f'{config.VideoProcessing.bmn_preprocessing_dir}/anno_train.json'
+ann_file_val = f'{config.VideoProcessing.bmn_preprocessing_dir}/anno_val.json'
+ann_file_test = f'{config.VideoProcessing.bmn_preprocessing_dir}/anno_val.json'
 
 train_pipeline = [ # Training data processing pipeline
     dict(type='LoadLocalizationFeature'), # Load localization feature pipeline
@@ -110,7 +111,7 @@ param_scheduler = [  # Parameter scheduler for updating optimizer parameters, su
     milestones=[7, ],  # Steps to decay the learning rate
     gamma=0.1)]  # Multiplicative factor of parameter value decay
 
-work_dir = './work_dirs/bmn_400x100_2x8_9e_quantex_share_feature/'
+work_dir = './work_dirs/bmn_400x100_2x8_9e_childlens_feature/'
 test_evaluator = dict(
     type='ANetMetric',
     metric_type='AR@AN',
