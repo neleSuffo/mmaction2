@@ -1,24 +1,10 @@
-# Copyright (c) OpenMMLab. All rights reserved.
-import argparse
-import multiprocessing
 import os
 import os.path as osp
-
+import multiprocessing
 import numpy as np
 import scipy.interpolate
 from mmengine import dump, load
-
-args = None
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='ANet Feature Prepare')
-    parser.add_argument('--rgb', default='', help='rgb feature root')
-    parser.add_argument('--flow', default='', help='flow feature root')
-    parser.add_argument('--dest', default='', help='dest root')
-    parser.add_argument('--output-format', default='csv')
-    args = parser.parse_args()
-    return args
+import config
 
 
 def pool_feature(data, num_proposals=100, num_sample_bins=3, pool_type='mean'):
@@ -63,41 +49,43 @@ def pool_feature(data, num_proposals=100, num_sample_bins=3, pool_type='mean'):
     return feature
 
 
-def merge_feat(name):
-    # concatenate rgb feat and flow feat for a single sample
-    rgb_feat = load(osp.join(args.rgb, name))
-    flow_feat = load(osp.join(args.flow, name))
+def merge_feat(name, output_dir, output_format, rgb_folder, flow_folder):
+    # Concatenate RGB and flow features for a single sample
+    rgb_feat = load(osp.join(rgb_folder, name))
+    flow_feat = load(osp.join(flow_folder, name))
     rgb_feat = pool_feature(rgb_feat)
     flow_feat = pool_feature(flow_feat)
     feat = np.stack((rgb_feat, flow_feat), axis=-1)
-    if not osp.exists(args.dest):
-        os.system(f'mkdir -p {args.dest}')
-    if args.output_format == 'pkl':
-        dump(feat, osp.join(args.dest, name))
-    elif args.output_format == 'csv':
+    
+    if not osp.exists(output_dir):
+        os.makedirs(output_dir, exist_ok=True)
+    
+    if output_format == 'pkl':
+        dump(feat, osp.join(output_dir, name))
+    elif output_format == 'csv':
         feat = feat.tolist()
         lines = []
         line0 = ','.join([f'f{i}' for i in range(400)])
         lines.append(line0)
         for line in feat:
             lines.append(','.join([f'{x:.4f}' for x in line]))
-        with open(osp.join(args.dest, name.replace('.pkl', '.csv')), 'w') as f:
+        with open(osp.join(output_dir, name.replace('.pkl', '.csv')), 'w') as f:
             f.write('\n'.join(lines))
 
 
 def main():
-    global args
-    args = parse_args()
-    rgb_feat = [file for file in os.listdir(args.rgb) if file.endswith('.pkl')]
-    flow_feat = [
-        file for file in os.listdir(args.flow) if file.endswith('.pkl')
-    ]
-    assert set(rgb_feat) == set(flow_feat)
-    # for feat in rgb_feat:
-    #     merge_feat(feat)
+    rgb_folder = config.FeatureExtraction.rgb_output_dir
+    flow_folder = config.FeatureExtraction.flow_output_dir
+    output_dir = config.FeatureExtraction.combined_feature_dir
+    output_format = config.FeatureExtraction.feature_output_format
+    
+    rgb_feat = [file for file in os.listdir(rgb_folder) if file.endswith('.pkl')]
+    flow_feat = [file for file in os.listdir(flow_folder) if file.endswith('.pkl')]
+    
+    assert set(rgb_feat) == set(flow_feat), "Mismatch between RGB and flow features."
+    
     pool = multiprocessing.Pool(32)
-    pool.map(merge_feat, rgb_feat)
-
+    pool.starmap(merge_feat, [(file, output_dir, output_format, rgb_folder, flow_folder) for file in rgb_feat])
 
 if __name__ == '__main__':
     main()
