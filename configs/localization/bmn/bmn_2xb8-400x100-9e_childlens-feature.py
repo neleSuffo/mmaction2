@@ -1,15 +1,14 @@
-import config
 _base_ = [
     '../../_base_/models/bmn_400x100.py', '../../_base_/default_runtime.py'
 ]
 
 # dataset settings
 dataset_type = 'ActivityNetDataset'
-data_root = config.FeatureExtraction.combined_feature_dir
-data_root_val = config.FeatureExtraction.combined_feature_dir
-ann_file_train = f'{config.VideoProcessing.bmn_preprocessing_dir}/anno_train.json'
-ann_file_val = f'{config.VideoProcessing.bmn_preprocessing_dir}/anno_val.json'
-ann_file_test = f'{config.VideoProcessing.bmn_preprocessing_dir}/anno_val.json'
+data_root = '/home/nele_pauline_suffo/ProcessedData/childlens/mmaction_feat'
+data_root_val = '/home/nele_pauline_suffo/ProcessedData/childlens/mmaction_feat'
+ann_file_train = '/home/nele_pauline_suffo/ProcessedData/childlens/anno_train.json'
+ann_file_val = '/home/nele_pauline_suffo/ProcessedData/childlens/anno_val.json'
+ann_file_test = '/home/nele_pauline_suffo/ProcessedData/childlens/anno_val.json'
 
 train_pipeline = [ # Training data processing pipeline
     dict(type='LoadLocalizationFeature'), # Load localization feature pipeline
@@ -40,8 +39,8 @@ test_pipeline = [ # Testing data processing pipeline
 ]
 
 train_dataloader = dict( # Config of train data loader
-    batch_size=8, # Batch size of each single GPU during training
-    num_workers=8, # Workers to pre-fetch data for each single GPU during training
+    batch_size=4, # Batch size of each single GPU during training
+    num_workers=48, # Workers to pre-fetch data for each single GPU during training
     persistent_workers=True, # if "True", the data loader will not shutdown the worker processes after an epoch end, which can accelerate training speed 
     sampler=dict(
         type='DefaultSampler',  # DefaultSampler which supports both distributed and non-distributed training. Refer to https://github.com/open-mmlab/mmengine/blob/main/mmengine/dataset/sampler.py
@@ -55,7 +54,7 @@ train_dataloader = dict( # Config of train data loader
 
 val_dataloader = dict(  # Config of validation dataloader
     batch_size=1,  # Batch size of each single GPU during evaluation
-    num_workers=8,  # Workers to pre-fetch data for each single GPU during evaluation
+    num_workers=48,  # Workers to pre-fetch data for each single GPU during evaluation
     persistent_workers=True,  # If `True`, the dataloader will not shut down the worker processes after an epoch end
     sampler=dict(
         type='DefaultSampler', 
@@ -69,7 +68,7 @@ val_dataloader = dict(  # Config of validation dataloader
 
 test_dataloader = dict(  # Config of test dataloader
     batch_size=1,  # Batch size of each single GPU during testing
-    num_workers=8,  # Workers to pre-fetch data for each single GPU during testing
+    num_workers=48,  # Workers to pre-fetch data for each single GPU during testing
     persistent_workers=True,  # If `True`, the dataloader will not shut down the worker processes after an epoch end
     sampler=dict(
         type='DefaultSampler', 
@@ -118,3 +117,6 @@ test_evaluator = dict(
     dump_config=dict(out=f'{work_dir}/results.json', output_format='json'))
 val_evaluator = test_evaluator
 
+# Set PYTORCH_CUDA_ALLOC_CONF to manage memory fragmentation
+import os
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:128'
