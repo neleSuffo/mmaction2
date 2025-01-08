@@ -27,6 +27,12 @@ for _, video_record in enumerate(video_records):
     video_subset = video_record[5]
     video_info['fps'] = float(video_record[3])
     video_info['rfps'] = float(video_record[4])
+
+    # Check if annotations are empty
+    if not video_info['annotations']:
+        config.logger.warning(f"No annotations found for video {video_name}. Skipping video.")
+        continue
+    
     video_dict_full[video_name] = video_info
 
     if video_subset == 'training':
@@ -41,7 +47,7 @@ config.logger.info(f"Training videos: {len(video_dict_train)}")
 config.logger.info(f"Validation videos: {len(video_dict_val)}")
 config.logger.info(f"Testing videos: {len(video_dict_test)}")
 
-output_dir = config.VideoProcessing.bmn_preprocessing_dir
+output_dir = config.final_output_dir
 with open(f'{output_dir}/anno_train.json', 'w') as result_file:
     json.dump(video_dict_train, result_file)
 
