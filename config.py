@@ -23,7 +23,7 @@ class AnnotationProcessing:
     annotations_dir = Path(f"{data_dir}/{dataset_name}_annotations")
     # Path to file that contains all annotations combined (generated from generate_combined_annotations.py)
     combined_annotation_path = Path(f"{annotations_dir}/{dataset_name}_annotations.json")
-    split_annotation_path = Path(f"{final_output_dir}_split_annotations.json")
+    split_annotation_path = Path(f"{annotations_dir}/{dataset_name}_split_annotations.json")
     # List of labels to include in combined json file in "projects/mmaction2/tools/data/quantex_share/generate_combined_annotations.py"
     activities_to_include = [
     "Playing with Object",
