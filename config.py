@@ -52,10 +52,10 @@ class VideoProcessing:
 
 class FrameExtraction:
     #parameters needed when running extract_frames.py & generate_rawframes_filelist.py
-    train_video_txt_path = Path(f"{final_output_dir}_train_video.txt")
-    val_video_txt_path = Path(f"{final_output_dir}_val_video.txt")
-    train_clip_txt_path = Path(f"{final_output_dir}_train_clip.txt")
-    val_clip_txt_path = Path(f"{final_output_dir}_val_clip.txt")
+    train_video_txt_path = Path(f"{final_output_dir}/train_video.txt")
+    val_video_txt_path = Path(f"{final_output_dir}/val_video.txt")
+    train_clip_txt_path = Path(f"{final_output_dir}/train_clip.txt")
+    val_clip_txt_path = Path(f"{final_output_dir}/val_clip.txt")
     video_input_dir = Path(f"{data_dir}/childlens_videos")
     videos_processed_dir = Path(f"{data_dir}/childlens_videos_processed")
     rawframes_output_dir = Path(f"{videos_processed_dir}/rawframes")
@@ -80,7 +80,6 @@ class FeatureExtraction:
     pretrained_model_url = ("https://download.openmmlab.com/mmaction/v1.0/recognition/tsn/tsn_imagenet-pretrained-r50_8xb32-1x1x3-100e_kinetics400-rgb/tsn_imagenet-pretrained-r50_8xb32-1x1x3-100e_kinetics400-rgb_20220906-cd10898e.pth")
     rgb_output_dir = Path(f"{VideoProcessing.bmn_preprocessing_dir}/features_rgb")
     flow_output_dir = Path(f"{VideoProcessing.bmn_preprocessing_dir}/features_flow")
-    video_list = Path(f"{VideoProcessing.bmn_preprocessing_dir}/{dataset_name}_train_video.txt")
     combined_feature_dir = Path(f"{final_output_dir}/mmaction_feat")
     feature_output_format = "csv"
     # interval (in frames) between the centers of adjacent clips.
