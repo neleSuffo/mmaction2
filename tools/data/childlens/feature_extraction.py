@@ -6,7 +6,8 @@ def generate_rgb_command():
     command = (
         f"python ../../misc/clip_feature_extraction.py {config.FeatureExtraction.rgb_config_file} "
         f"{config.FeatureExtraction.pretrained_model_url} {config.FeatureExtraction.rgb_output_dir} "
-        f"--video-list {config.FeatureExtraction.video_list} "
+        f"--video-list {config.FrameExtraction.train_video_txt_path} "
+        #f"--video-list {config.FrameExtraction.val_video_txt_path} "
         f"--video-root {config.FrameExtraction.rawframes_processed_dir} "
     )
     return command
@@ -16,7 +17,8 @@ def generate_flow_command():
     command = (
         f"python ../../misc/clip_feature_extraction.py {config.FeatureExtraction.flow_config_file} "
         f"{config.FeatureExtraction.pretrained_model_url} {config.FeatureExtraction.flow_output_dir} "
-        f"--video-list {config.FeatureExtraction.video_list} "
+        f"--video-list {config.FrameExtraction.train_video_txt_path} "
+        #f"--video-list {config.FrameExtraction.val_video_txt_path} "
         f"--video-root {config.FrameExtraction.rawframes_processed_dir} "
     )
     return command
