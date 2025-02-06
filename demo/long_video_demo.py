@@ -236,7 +236,6 @@ def main():
 
     cfg = Config.fromfile(args.config)
     cfg.merge_from_dict(args.cfg_options)
-
     model = init_recognizer(cfg, args.checkpoint, device=args.device)
     data = dict(img_shape=None, modality='RGB', label=-1)
     with open(args.label, 'r') as f:
