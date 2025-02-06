@@ -80,7 +80,7 @@ test_dataloader = dict(  # Config of test dataloader
         pipeline=test_pipeline,
         test_mode=True))
 
-max_epochs = 9  # Total epochs to train the model
+max_epochs = 30  # Total epochs to train the model
 train_cfg = dict(  # Config of training loop
     type='EpochBasedTrainLoop',  # Name of training loop
     max_epochs=max_epochs,  # Total training epochs
