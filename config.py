@@ -16,19 +16,19 @@ logger = logging.getLogger(__name__)
 
 data_dir = Path("/home/nele_pauline_suffo/ProcessedData")
 dataset_name = "childlens"
-final_output_dir = Path(f"/home/nele_pauline_suffo/ProcessedData/{dataset_name}")
+final_output_dir = Path(f"/home/nele_pauline_suffo/ProcessedData/bmn_{dataset_name}")
 
 class AnnotationProcessing:
     # directory with individual json annotations files
-    annotations_dir = Path(f"{data_dir}/{dataset_name}_annotations")
+    annotations_dir = Path("/home/nele_pauline_suffo/ProcessedData/childlens_annotations/keeper/v1")
     # Path to file that contains all annotations combined (generated from generate_combined_annotations.py)
-    combined_annotation_path = Path(f"{annotations_dir}/{dataset_name}_annotations.json")
-    split_annotation_path = Path(f"{annotations_dir}/{dataset_name}_split_annotations.json")
+    combined_annotation_path = Path(f"/home/nele_pauline_suffo/ProcessedData/bmn_preprocessing/annotations/{dataset_name}_annotations.json")
+    split_annotation_path = Path(f"/home/nele_pauline_suffo/ProcessedData/bmn_preprocessing/annotations/{dataset_name}_split_annotations.json")
     #List of labels to include in combined json file in "projects/mmaction2/tools/data/quantex_share/generate_combined_annotations.py"
     activities_to_include = [
-    "Playing with Object",
-    "Drawing",
-    "Reading a Book"
+    "playing_with_object",
+    "drawing",
+    "reading_a_book"
     ]
     # activities_to_include = [
     # "Playing with Object",
