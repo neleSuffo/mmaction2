@@ -47,7 +47,7 @@ config.logger.info(f"Training videos: {len(video_dict_train)}")
 config.logger.info(f"Validation videos: {len(video_dict_val)}")
 config.logger.info(f"Testing videos: {len(video_dict_test)}")
 
-output_dir = config.final_output_dir
+output_dir = config.bmn_preprocessing_dir
 with open(f'{output_dir}/anno_train.json', 'w') as result_file:
     json.dump(video_dict_train, result_file)
 
