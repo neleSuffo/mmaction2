@@ -10,7 +10,20 @@ def read_json(file_path: str) -> Dict:
         data = json.load(file)
     return data
 
-def get_frame_count(video_path):
+def get_frame_count(video_path: str) -> int:
+    """
+    Get the total number of frames in a video file.
+    
+    Parameters:
+    ----------
+    video_path : str
+        The path to the video file.
+    
+    Returns:
+    -------
+    int
+        The total number of frames in the video.
+    """
     # Open the vadeo file
     video = cv2.VideoCapture(video_path)
     
@@ -27,10 +40,28 @@ def get_frame_count(video_path):
     return frame_count
 
 def convert_annotations(data: Dict, fps: float = config.FrameExtraction.fps) -> Dict:
+    """
+    Convert annotations from the original format json format to the desired format.
+    
+    Parameters:
+    ----------
+    data : Dict
+        The original annotations data loaded from a JSON file.
+    fps : float
+        Frames per second for the video processing.
+        Default is set in FrameExtraction class.
+        This is used to calculate the duration in seconds from frame counts.    
+    
+    Returns:
+    -------
+    Dict
+        A dictionary containing the converted annotations with video IDs, durations, and activity segments.
+    
+    """
     converted_annotations = {}
     
     # Extract video ID, duration in seconds, and duration in frames
-    video_id = data['metadata']['name']
+    video_id = data['video_name']
     short_video_id = video_id.replace(".MP4", "")
     duration_frames = get_frame_count(config.FrameExtraction.video_input_dir / video_id)
     duration_seconds = int(duration_frames / fps)
@@ -43,27 +74,44 @@ def convert_annotations(data: Dict, fps: float = config.FrameExtraction.fps) -> 
         "fps": fps,
     }
 
-    # Loop through each annotation instance
-    for item in data['instances']:
-        start_time = item["meta"]["start"]
-        end_time = item["meta"]["end"]
+    # Loop through each annotation in the annotations array
+    for annotation in data.get('annotations', []):
+        # Get the event ID as the label
+        label = annotation.get('eventId')
         
-        for parameter in item.get("parameters", []):
-            timestamps = parameter.get("timestamps", [])
+        # Only process annotations that are in our activities to include
+        if label in config.AnnotationProcessing.activities_to_include:
+            start_time = annotation.get('startTime', 0)
+            end_time = annotation.get('endTime', 0)
             
-            if timestamps and "attributes" in timestamps[0] and timestamps[0]["attributes"]:
-                names = [attr["name"] for timestamp in timestamps for attr in timestamp.get("attributes", [])]
-                label = next((name for name in names if name in config.AnnotationProcessing.activities_to_include), None)
-                if label is not None:
-                    segment = [start_time / 1_000_000.0, end_time / 1_000_000.0]
-                    converted_annotations[short_video_id]["annotations"].append({
-                        "segment": segment,
-                        "label": label
-                    })
+            # Create segment (times are already in seconds)
+            segment = [start_time, end_time]
+            
+            converted_annotations[short_video_id]["annotations"].append({
+                "segment": segment,
+                "label": label
+            })
     
     return converted_annotations
 
 def adjust_for_split_videos(data: Dict, chunk_size: int, fps: float = config.FrameExtraction.fps) -> Dict:
+    """
+    Adjust annotations for videos that are split into chunks.
+    
+    Parameters:
+    ----------
+    data : Dict
+        The original annotations data loaded from a JSON file.
+    chunk_size : int
+        The number of frames in each chunk for splitting videos.
+    fps : float
+        Frames per second for the video processing.
+        
+    Returns:
+    -------
+    Dict
+        A dictionary containing the split annotations with video IDs, durations, and activity segments.
+    """
     split_annotations = {}
     chunks_in_video = 0  # Initialize a counter for chunks
     for video_id, video_data in data.items():
@@ -104,18 +152,34 @@ def adjust_for_split_videos(data: Dict, chunk_size: int, fps: float = config.Fra
     
     return split_annotations, chunks_in_video
 
-def process_all_json_files(folder_path: Path, 
+def process_all_json_files(annotations_dir: Path, 
                            output_file: Path,
                            split_output_file: Path,
                            chunk_size: int = config.FrameExtraction.chunk_size,
                            fps: float = config.FrameExtraction.fps) -> None:
+    """
+    Process all JSON files in the specified folder and generate combined and split annotations.
+    
+    Parameters:
+    ----------
+    annotations_dir : Path
+        The path to the folder containing JSON files.
+    output_file : Path
+        The path to save the combined annotations JSON file.
+    split_output_file : Path
+        The path to save the split annotations JSON file.
+    chunk_size : int
+        The number of frames in each chunk for splitting videos.
+    fps : float
+        Frames per second for the video processing.
+    """
     all_annotations = {}
     all_split_annotations = {}
     total_chunks = 0  # Total number of chunks across all videos
 
-    json_files = list(folder_path.rglob("*.json"))
+    json_files = list(annotations_dir.rglob("*.json"))
     num_files = len(json_files)
-    config.logger.info(f"Found {num_files} JSON files in the folder {folder_path}")
+    config.logger.info(f"Found {num_files} JSON files in the folder {annotations_dir}")
     file_counter = 0
     
     for filename in json_files:
