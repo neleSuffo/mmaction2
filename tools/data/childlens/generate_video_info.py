@@ -72,7 +72,22 @@ def split_videos(annotations: Dict, train_ratio: float = config.VideoProcessing.
     )
     return training, testing, validation
 
-def generate_video_info_csv(annotations: Dict, output_csv: str):
+def generate_video_info_csv(annotations: Dict, output_csv: str) -> None:
+    """
+    Generates a CSV file with video information including video ID, number of frames, duration, fps, and subset.
+    
+    Parameters:
+    ----------
+    annotations : Dict
+        A dictionary containing video annotations.
+    output_csv : str
+        The path to the output CSV file.
+
+    Returns:
+    -------
+    None
+        The function writes the video information to the specified CSV file.
+    """
     training, testing, validation = split_videos(annotations)
 
     with open(output_csv, 'w', newline='') as csvfile:
