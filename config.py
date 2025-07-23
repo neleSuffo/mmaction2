@@ -62,6 +62,7 @@ class FrameExtraction:
     train_clip_txt_path = Path(f"{bmn_preprocessing_dir}/train_clip.txt")
     val_clip_txt_path = Path(f"{bmn_preprocessing_dir}/val_clip.txt")
     video_input_dir = Path(f"{data_dir}/childlens_videos")
+    videos_input_dir_keeper_v1 = Path(f"{video_input_dir}/keeper_v1")
     videos_processed_dir = Path(f"{data_dir}/childlens_videos_processed")
     rawframes_output_dir = Path(f"{videos_processed_dir}/rawframes")
     rawframes_processed_dir = Path(f"{bmn_preprocessing_dir}/rawframes")
