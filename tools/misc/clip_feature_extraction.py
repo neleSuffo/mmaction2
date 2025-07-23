@@ -230,6 +230,40 @@ def merge_args(cfg, args):
     return cfg
 
 
+def filter_existing_videos(args):
+    """Filter out videos that already have extracted features."""
+    video_list = list_from_file(args.video_list)
+    video_names = [line.split(' ')[0] for line in video_list]
+    
+    # Check which videos don't have feature files yet
+    videos_to_process = []
+    videos_with_features = []
+    
+    for i, video_name in enumerate(video_names):
+        output_file = osp.join(args.output_prefix, video_name + '.pkl')
+        if not osp.exists(output_file):
+            videos_to_process.append(video_list[i])
+        else:
+            videos_with_features.append(video_name)
+    
+    config.logger.info(f"Found {len(videos_with_features)} videos with existing features, {len(videos_to_process)} videos to process")
+    
+    # If no videos need processing, return early
+    if not videos_to_process:
+        config.logger.info("All videos already have extracted features. Skipping feature extraction.")
+        return False
+    
+    # Create a temporary filtered video list file if some videos need processing
+    if len(videos_to_process) < len(video_list):
+        temp_video_list = args.video_list + '.temp'
+        with open(temp_video_list, 'w') as f:
+            f.write('\n'.join(videos_to_process))
+        args.video_list = temp_video_list
+        config.logger.info(f"Created temporary video list with {len(videos_to_process)} videos to process")
+    
+    return True
+
+
 def split_feats(args):
     config.logger.info("Splitting features and saving individual files.")
     total_feats = load(args.dump)
@@ -241,22 +275,48 @@ def split_feats(args):
     video_list = list_from_file(args.video_list)
     video_list = [line.split(' ')[0] for line in video_list]
 
+    # Track processing statistics
+    processed_count = 0
+    skipped_count = 0
+
     # Process each video sequentially
     for video_name, feature in zip(video_list, total_feats):
+        output_file = osp.join(args.output_prefix, video_name + '.pkl')
+        
+        # Check if the feature file already exists
+        if osp.exists(output_file):
+            config.logger.debug(f"Feature file already exists for {video_name}, skipping.")
+            skipped_count += 1
+            continue
+        
         config.logger.debug(f"Saving features for video: {video_name}")
         
         # Save the features for the current video
-        dump(feature, osp.join(args.output_prefix, video_name + '.pkl'))
+        dump(feature, output_file)
+        processed_count += 1
         
         # Explicitly clear GPU memory after processing each video
         torch.cuda.empty_cache()  # This ensures the memory is freed after each video
 
     # After processing all videos, remove the total features dump file
-    os.remove(args.dump)
-    config.logger.info("Feature splitting completed.")
+    if osp.exists(args.dump):
+        os.remove(args.dump)
+    
+    # Clean up temporary video list file if it was created
+    if args.video_list.endswith('.temp'):
+        os.remove(args.video_list)
+        config.logger.info("Cleaned up temporary video list file")
+    
+    config.logger.info(f"Feature splitting completed. Processed: {processed_count}, Skipped: {skipped_count}")
     
 def main():
     args = parse_args()
+
+    # Check if we need to process any videos (filter out already processed ones)
+    need_processing = filter_existing_videos(args)
+    if not need_processing:
+        config.logger.info("All videos already have extracted features. Exiting early.")
+        return  # Exit early if all videos already have features
 
     # load config
     cfg = Config.fromfile(args.config)
