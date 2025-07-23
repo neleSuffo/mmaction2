@@ -87,10 +87,10 @@ def generate_rawframes_filelist():
 
     with open(config.FrameExtraction.train_video_txt_path, 'w') as fout:
         fout.write('\n'.join(train_lines))
-        config.logging.info("Stored training video list at " + config.FrameExtraction.train_video_txt_path)
+        config.logging.info("Stored training video list at " + str(config.FrameExtraction.train_video_txt_path))
     with open(config.FrameExtraction.val_video_txt_path, 'w') as fout:
         fout.write('\n'.join(val_lines))
-        config.logging.info("Stored validation video list at " + config.FrameExtraction.val_video_txt_path)
+        config.logging.info("Stored validation video list at " + str(config.FrameExtraction.val_video_txt_path))
     
     def clip_list(k, anno, video_anno):
         duration = anno['duration_frame']
@@ -122,10 +122,10 @@ def generate_rawframes_filelist():
 
     with open(config.FrameExtraction.train_clip_txt_path, 'w') as fout:
         fout.write('\n'.join(train_clips))
-        config.logging.info("Stored training clip list at " + config.FrameExtraction.train_clip_txt_path)
+        config.logging.info("Stored training clip list at " + str(config.FrameExtraction.train_clip_txt_path))
     with open(config.FrameExtraction.val_clip_txt_path, 'w') as fout:
         fout.write('\n'.join(val_clips))
-        config.logging.info("Stored validation clip list at " + config.FrameExtraction.val_clip_txt_path)
+        config.logging.info("Stored validation clip list at " + str(config.FrameExtraction.val_clip_txt_path))
 
 if __name__ == '__main__':
     generate_rawframes_filelist()
