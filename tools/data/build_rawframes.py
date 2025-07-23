@@ -44,6 +44,20 @@ def extract_frame(vid_item):
             try:
                 video_name = osp.splitext(osp.basename(vid_path))[0]
                 out_full_path = osp.join(out_full_path, video_name)
+                
+                # Check if output folder already exists and has content
+                if osp.exists(out_full_path) and len(os.listdir(out_full_path)) > 0:
+                    logging.info(f'Output folder already exists and has content: {out_full_path}. Skipping {vid_path}')
+                    # Mark as successful since it's already processed
+                    lock.acquire()
+                    with open(report_file, 'a') as f:
+                        line = full_path + '\n'
+                        f.write(line)
+                    lock.release()
+                    return True
+
+                # Create output directory if it doesn't exist
+                os.makedirs(out_full_path, exist_ok=True)
 
                 vr = mmcv.VideoReader(full_path)
                 for i, vr_frame in enumerate(vr):
@@ -77,49 +91,91 @@ def extract_frame(vid_item):
             except Exception:
                 run_success = -1
         else:
+            # For denseflow, check if output folder exists and has content
+            video_name = osp.splitext(osp.basename(vid_path))[0]
+            expected_out_path = osp.join(out_full_path, video_name)
+            
+            if osp.exists(expected_out_path) and len(os.listdir(expected_out_path)) > 0:
+                logging.info(f'Output folder already exists and has content: {expected_out_path}. Skipping {vid_path}')
+                # Mark as successful since it's already processed
+                lock.acquire()
+                with open(report_file, 'a') as f:
+                    line = full_path + '\n'
+                    f.write(line)
+                lock.release()
+                return True
+            
             if args.new_short == 0:
                 cmd = osp.join(
-                    f"'{config.Paths.denseflow_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                    f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                     f' -nw={args.new_width} -nh={args.new_height} -v')
             else:
                 cmd = osp.join(
-                    f"'{config.Paths.denseflow_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                    f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                     f' -ns={args.new_short} -v')
             run_success = os.system(cmd)
     elif task == 'flow':
+        # Check if output folder exists and has content for flow
+        video_name = osp.splitext(osp.basename(vid_path))[0]
+        expected_out_path = osp.join(out_full_path, video_name)
+        
+        if osp.exists(expected_out_path) and len(os.listdir(expected_out_path)) > 0:
+            logging.info(f'Output folder already exists and has content: {expected_out_path}. Skipping {vid_path}')
+            # Mark as successful since it's already processed
+            lock.acquire()
+            with open(report_file, 'a') as f:
+                line = full_path + '\n'
+                f.write(line)
+            lock.release()
+            return True
+        
         if args.input_frames:
             if args.new_short == 0:
                 cmd = osp.join(
-                    f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -nw={args.new_width} --nh={args.new_height} -v --if')
             else:
                 cmd = osp.join(
-                    f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -ns={args.new_short} -v --if')
         else:
             if args.new_short == 0:
                 cmd = osp.join(
-                    f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -nw={args.new_width} --nh={args.new_height} -v')
             else:
                 cmd = osp.join(
-                    f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                    f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                     f' -ns={args.new_short} -v')
         run_success = os.system(cmd)
     else:        
+        # Check if output folder exists and has content for both rgb and flow
+        video_name = osp.splitext(osp.basename(vid_path))[0]
+        expected_out_path = osp.join(out_full_path, video_name)
+        
+        if osp.exists(expected_out_path) and len(os.listdir(expected_out_path)) > 0:
+            logging.info(f'Output folder already exists and has content: {expected_out_path}. Skipping {vid_path}')
+            # Mark as successful since it's already processed
+            lock.acquire()
+            with open(report_file, 'a') as f:
+                line = full_path + '\n'
+                f.write(line)
+            lock.release()
+            return True
+        
         if args.new_short == 0:
             cmd_rgb = osp.join(
-                f"'{config.Paths.denseflow_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                 f' -nw={args.new_width} -nh={args.new_height} -v')
             cmd_flow = osp.join(
-                f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                 f' -nw={args.new_width} -nh={args.new_height} -v')
         else:
             cmd_rgb = osp.join(
-                f"'{config.Paths.denseflow_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
+                f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -b=20 -s=0 -o='{out_full_path}'"
                 f' -ns={args.new_short} -v')
             cmd_flow = osp.join(
-                f"'{config.Paths.denseflow_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
+                f"'{config.FrameExtraction.denseflow_installation_path}' '{full_path}' -a={method} -b=20 -s=1 -o='{out_full_path}'"  # noqa: E501
                 f' -ns={args.new_short} -v')
         run_success_rgb = os.system(cmd_rgb)
         run_success_flow = os.system(cmd_flow)
