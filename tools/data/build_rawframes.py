@@ -295,19 +295,19 @@ if __name__ == '__main__':
                 os.makedirs(new_dir)
 
     if args.input_frames:
-        logging.info('Reading rgb frames from folder: ', args.src_dir)
+        logging.info(f'Reading rgb frames from folder: {args.src_dirpython feature_extraction.py}')
         fullpath_list = glob.glob(args.src_dir + '/*' * args.level)
-        logging.info('Total number of rgb frame folders found: ', len(fullpath_list))
+        logging.info(f'Total number of rgb frame folders found: {len(fullpath_list)}')
     else:
-        logging.info('Reading videos from folder: ', args.src_dir)
+        logging.info(f'Reading videos from folder: {args.src_dir}')
         if args.mixed_ext:
             logging.info('Extension of videos is mixed')
             fullpath_list = glob.glob(args.src_dir + '/*' * args.level)
         else:
-            logging.info('Extension of videos: ', args.ext)
+            logging.info(f'Extension of videos: {args.ext}')
             fullpath_list = glob.glob(args.src_dir + '/*' * args.level + '.' +
                                       args.ext)
-        logging.info('Total number of videos found: ', len(fullpath_list))
+        logging.info(f'Total number of videos found: {len(fullpath_list)}')
 
     if args.resume:
         done_fullpath_list = []
