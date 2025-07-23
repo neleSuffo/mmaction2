@@ -4,11 +4,11 @@ _base_ = [
 
 # dataset settings
 dataset_type = 'ActivityNetDataset'
-data_root = '/home/nele_pauline_suffo/ProcessedData/childlens/mmaction_feat'
-data_root_val = '/home/nele_pauline_suffo/ProcessedData/childlens/mmaction_feat'
-ann_file_train = '/home/nele_pauline_suffo/ProcessedData/childlens/anno_train.json'
-ann_file_val = '/home/nele_pauline_suffo/ProcessedData/childlens/anno_val.json'
-ann_file_test = '/home/nele_pauline_suffo/ProcessedData/childlens/anno_val.json'
+data_root = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/mmaction_feat'
+data_root_val = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/mmaction_feat'
+ann_file_train = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_train.json'
+ann_file_val = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_val.json'
+ann_file_test = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_val.json'
 
 train_pipeline = [ # Training data processing pipeline
     dict(type='LoadLocalizationFeature'), # Load localization feature pipeline
