@@ -35,14 +35,7 @@ def main():
     finally:
         # Change directory back to original
         os.chdir(original_dir)
-        
-        # Change back to the directory with the name stored earlier
-        target_dir = os.path.join(original_dir, current_dir_name)
-        if os.path.exists(target_dir):
-            os.chdir(target_dir)
-            print(f"Changed back to directory: {target_dir}")
-        else:
-            print(f"Directory '{current_dir_name}' does not exist in {original_dir}")
+        print(f"Returned to original directory: {original_dir}")
 
 if __name__ == "__main__":
     main()
