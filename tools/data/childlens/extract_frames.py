@@ -14,7 +14,7 @@ def main():
         # Build the command dynamically from config.py
         command = [
             "python", "build_rawframes.py",
-            config.FrameExtraction.video_input_dir, config.FrameExtraction.rawframes_output_dir,
+            str(config.FrameExtraction.videos_input_dir_keeper_v1), str(config.FrameExtraction.rawframes_output_dir),
             "--level", str(config.FrameExtraction.level),
             "--flow-type", config.FrameExtraction.flow_type,
             "--ext", config.FrameExtraction.video_ext,
