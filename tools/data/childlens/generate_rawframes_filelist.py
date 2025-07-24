@@ -7,6 +7,7 @@ import csv
 
 train_rawframe_dir = config.FrameExtraction.rawframes_processed_dir
 val_rawframe_dir = config.FrameExtraction.rawframes_processed_dir
+test_rawframe_dir = config.FrameExtraction.rawframes_processed_dir
 
 def load_video_info(video_info_file):
     config.logger.info(f"Loading video info from {video_info_file}")
@@ -32,6 +33,9 @@ def generate_rawframes_filelist():
     val_dir_list = [
         osp.join(val_rawframe_dir, x) for x in os.listdir(val_rawframe_dir)
     ]
+    test_dir_list = [
+        osp.join(test_rawframe_dir, x) for x in os.listdir(test_rawframe_dir)
+    ]
 
     def simple_label(annotation):
         label = annotation[0]['label']
@@ -50,6 +54,7 @@ def generate_rawframes_filelist():
 
     training = {}
     validation = {}
+    testing = {}
     key_dict = {}
 
     for video_id in annotations:
@@ -57,7 +62,7 @@ def generate_rawframes_filelist():
         data = annotations[video_id]
         subset = video_info[video_id]['subset']
 
-        if subset in ['training', 'validation']:
+        if subset in ['training', 'validation', 'testing']:
             video_annotations = data['annotations']
             if not video_annotations:
                 config.logger.warning(f"No annotations found for video {video_id}. Skipping video.")
@@ -66,9 +71,12 @@ def generate_rawframes_filelist():
             if subset == 'training':
                 dir_list = train_dir_list
                 data_dict = training
-            else:
+            elif subset == 'validation':
                 dir_list = val_dir_list
                 data_dict = validation
+            else:  # testing
+                dir_list = test_dir_list
+                data_dict = testing
 
             gt_dir_name, num_frames = count_frames(dir_list, video_id)
             if gt_dir_name is None:
@@ -84,6 +92,10 @@ def generate_rawframes_filelist():
         k + ' ' + str(validation[k][0]) + ' ' + str(validation[k][1])
         for k in validation
     ]
+    test_lines = [
+        k + ' ' + str(testing[k][0]) + ' ' + str(testing[k][1])
+        for k in testing
+    ]
 
     with open(config.FrameExtraction.train_video_txt_path, 'w') as fout:
         fout.write('\n'.join(train_lines))
@@ -91,6 +103,9 @@ def generate_rawframes_filelist():
     with open(config.FrameExtraction.val_video_txt_path, 'w') as fout:
         fout.write('\n'.join(val_lines))
         config.logging.info("Stored validation video list at " + str(config.FrameExtraction.val_video_txt_path))
+    with open(config.FrameExtraction.test_video_txt_path, 'w') as fout:
+        fout.write('\n'.join(test_lines))
+        config.logging.info("Stored test video list at " + str(config.FrameExtraction.test_video_txt_path))
     
     def clip_list(k, anno, video_anno):
         duration = anno['duration_frame']
@@ -114,11 +129,13 @@ def generate_rawframes_filelist():
             lines.append(newline)
         return lines
 
-    train_clips, val_clips = [], []
+    train_clips, val_clips, test_clips = [], [], []
     for k in training:
         train_clips.extend(clip_list(k, annotations[key_dict[k]], training[k]))
     for k in validation:
         val_clips.extend(clip_list(k, annotations[key_dict[k]], validation[k]))
+    for k in testing:
+        test_clips.extend(clip_list(k, annotations[key_dict[k]], testing[k]))
 
     with open(config.FrameExtraction.train_clip_txt_path, 'w') as fout:
         fout.write('\n'.join(train_clips))
@@ -126,6 +143,9 @@ def generate_rawframes_filelist():
     with open(config.FrameExtraction.val_clip_txt_path, 'w') as fout:
         fout.write('\n'.join(val_clips))
         config.logging.info("Stored validation clip list at " + str(config.FrameExtraction.val_clip_txt_path))
+    with open(config.FrameExtraction.test_clip_txt_path, 'w') as fout:
+        fout.write('\n'.join(test_clips))
+        config.logging.info("Stored test clip list at " + str(config.FrameExtraction.test_clip_txt_path))
 
 if __name__ == '__main__':
     generate_rawframes_filelist()
