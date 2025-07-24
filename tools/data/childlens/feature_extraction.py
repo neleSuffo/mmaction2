@@ -1,5 +1,7 @@
 import config
 import subprocess
+import os
+import os.path as osp
 
 def generate_rgb_command(video_list_path, split_name):
     """Generate the command for RGB feature extraction."""
