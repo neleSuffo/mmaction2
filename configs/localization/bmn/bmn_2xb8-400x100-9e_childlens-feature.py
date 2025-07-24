@@ -8,7 +8,7 @@ data_root = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/mmaction_feat'
 data_root_val = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/mmaction_feat'
 ann_file_train = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_train.json'
 ann_file_val = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_val.json'
-ann_file_test = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_val.json'
+ann_file_test = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_test.json'
 
 train_pipeline = [ # Training data processing pipeline
     dict(type='LoadLocalizationFeature'), # Load localization feature pipeline
@@ -80,7 +80,7 @@ test_dataloader = dict(  # Config of test dataloader
         pipeline=test_pipeline,
         test_mode=True))
 
-max_epochs = 30  # Total epochs to train the model
+max_epochs = 50  # Total epochs to train the model
 train_cfg = dict(  # Config of training loop
     type='EpochBasedTrainLoop',  # Name of training loop
     max_epochs=max_epochs,  # Total training epochs
