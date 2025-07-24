@@ -59,8 +59,10 @@ class FrameExtraction:
     #parameters needed when running extract_frames.py & generate_rawframes_filelist.py
     train_video_txt_path = Path(f"{bmn_preprocessing_dir}/train_video.txt")
     val_video_txt_path = Path(f"{bmn_preprocessing_dir}/val_video.txt")
+    test_video_txt_path = Path(f"{bmn_preprocessing_dir}/test_video.txt")
     train_clip_txt_path = Path(f"{bmn_preprocessing_dir}/train_clip.txt")
     val_clip_txt_path = Path(f"{bmn_preprocessing_dir}/val_clip.txt")
+    test_clip_txt_path = Path(f"{bmn_preprocessing_dir}/test_clip.txt")
     video_input_dir = Path(f"{data_dir}/childlens_videos")
     videos_input_dir_keeper_v1 = Path(f"{video_input_dir}/keeper_v1")
     videos_processed_dir = Path(f"{data_dir}/childlens_videos_processed")
