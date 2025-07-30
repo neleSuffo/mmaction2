@@ -5,7 +5,6 @@ _base_ = [
 # dataset settings
 dataset_type = 'ActivityNetDataset'
 data_root = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/mmaction_feat'
-data_root_val = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/mmaction_feat'
 ann_file_train = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_train.json'
 ann_file_val = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_val.json'
 ann_file_test = '/home/nele_pauline_suffo/ProcessedData/bmn_childlens/anno_test.json'
@@ -49,7 +48,7 @@ train_dataloader = dict( # Config of train data loader
     dataset=dict(  # Config of train dataset
         type=dataset_type,
         ann_file=ann_file_train,  # Path of annotation file
-        data_prefix=dict(video=data_root),  # Prefix of video path
+        data_prefix=dict(video=data_root),
         pipeline=train_pipeline))
 
 val_dataloader = dict(  # Config of validation dataloader
@@ -62,7 +61,7 @@ val_dataloader = dict(  # Config of validation dataloader
     dataset=dict(  # Config of validation dataset
         type=dataset_type,
         ann_file=ann_file_val,  # Path of annotation file
-        data_prefix=dict(video=data_root_val),  # Prefix of video path
+        data_prefix=dict(video=data_root),
         pipeline=val_pipeline,
         test_mode=True))
 
@@ -76,11 +75,11 @@ test_dataloader = dict(  # Config of test dataloader
     dataset=dict(  # Config of test dataset
         type=dataset_type,
         ann_file=ann_file_test, # Path of annotation file
-        data_prefix=dict(video=data_root_val),  # Prefix of video path
+        data_prefix=dict(video=data_root),
         pipeline=test_pipeline,
         test_mode=True))
 
-max_epochs = 50  # Total epochs to train the model
+max_epochs = 100  # Total epochs to train the model
 train_cfg = dict(  # Config of training loop
     type='EpochBasedTrainLoop',  # Name of training loop
     max_epochs=max_epochs,  # Total training epochs
