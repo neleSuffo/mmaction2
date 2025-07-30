@@ -1,10 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 _base_ = ['../../_base_/models/bmn_400x100.py']
 
-# Modify the model configuration
-model = dict(
-    cls_head=dict(average_clips='prob')
-)
+test_cfg = dict(average_clips='prob')
 
 # dataset settings
 dataset_type = 'VideoDataset'
@@ -20,6 +17,10 @@ test_pipeline = [
     dict(type='Resize', scale=(-1, 256)),
     dict(type='CenterCrop', crop_size=224),
     dict(type='FormatShape', input_format='NCHW'),
+    dict(
+        type='Normalize',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375]),
     dict(type='PackActionInputs')
 ]
 
